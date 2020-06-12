@@ -1,28 +1,19 @@
 {
-  "name": "javascript-library-template",
+  "name": "algolia-timezone-db",
   "version": "0.0.0-development",
-  "private": false,
-  "description": "JavaScript library template to focus on ⌨️ coding, 🙌 collaborating and 🚀 shipping",
+  "private": true,
+  "description": "TODO",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vvo/javascript-library-template.git"
+    "url": "https://github.com/vvo/algolia-timezone-db.git"
   },
   "license": "MIT",
   "author": "Vincent Voyer <vincent@codeagain.com>",
-  "main": "dist/",
-  "files": [
-    "dist/",
-    "lib/",
-    "LICENSE",
-    "README.md"
-  ],
   "scripts": {
-    "build": "babel lib/ -d dist/ --source-maps --ignore '**/*.test.js' --delete-dir-on-start",
+    "build": "babel-node lib/index",
     "format": "prettier --write '**/*.*' && eslint . --fix",
     "lint": "prettier --check '**/*.*' && eslint .",
-    "prepublishOnly": "yarn build",
-    "semantic-release": "semantic-release",
-    "test": "jest --coverage && yarn lint"
+    "test": "yarn lint"
   },
   "babel": {
     "presets": [
@@ -42,7 +33,6 @@
   "eslintConfig": {
     "env": {
       "es6": true,
-      "jest": true,
       "node": true
     },
     "parser": "babel-eslint",
@@ -50,12 +40,8 @@
       "ecmaVersion": 2019,
       "sourceType": "module"
     },
-    "plugins": [
-      "jest"
-    ],
     "extends": [
       "eslint:recommended",
-      "plugin:jest/recommended",
       "plugin:import/recommended"
     ],
     "rules": {
@@ -72,24 +58,25 @@
       ]
     }
   },
-  "jest": {},
-  "dependencies": {},
+  "dependencies": {
+    "@babel/node": "^7.10.1",
+    "algoliasearch": "^4.3.0",
+    "csv-parse": "^4.10.1",
+    "dotenv": "^8.2.0",
+    "got": "^11.3.0",
+    "lodash": "^4.17.15",
+    "luxon": "^1.24.1",
+    "p-each-series": "^2.1.0",
+    "unzipper": "^0.10.11"
+  },
   "devDependencies": {
-    "@babel/cli": "7.10.1",
     "@babel/core": "7.10.2",
     "@babel/preset-env": "7.10.2",
-    "@types/jest": "26.0.0",
     "babel-eslint": "10.1.0",
-    "babel-jest": "26.0.1",
     "eslint": "7.2.0",
     "eslint-plugin-import": "2.21.2",
-    "eslint-plugin-jest": "23.13.2",
-    "jest": "26.0.1",
-    "jest-date-mock": "1.0.8",
     "prettier": "2.0.5",
-    "prettier-plugin-packagejson": "2.2.5",
-    "semantic-release": "17.0.8",
-    "semantic-release-cli": "5.3.1"
+    "prettier-plugin-packagejson": "2.2.5"
   },
   "renovate": {
     "extends": [
