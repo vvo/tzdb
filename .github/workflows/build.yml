@@ -1,10 +1,11 @@
-name: CI
+name: Build
 
 on:
   push:
     branches:
       - master
-
+  schedule:
+    - cron:  '*/15 * * * *'
 
 jobs:
   ci:
@@ -30,5 +31,10 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
       - name: Yarn install
         run: yarn --frozen-lockfile
-      - name: Test
-        run: yarn test
+      - name: Build
+        run: yarn build
+        env:
+          ALGOLIA_APPLICATION_ID: ${{ secrets.ALGOLIA_APPLICATION_ID }}
+          ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}
+          ALGOLIA_INDEX_NAME: ${{ secrets.ALGOLIA_INDEX_NAME }}
+
