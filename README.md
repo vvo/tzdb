@@ -4,7 +4,7 @@ This is a list of major cities (population > 45,000) and their associated time z
 
 ## cities.json
 
-You can either directly use the [cities.json](./cities.json) output in your system.
+You can either directly use the [cities.json](./cities.json?raw=true) output in your system.
 
 ## Algolia
 
