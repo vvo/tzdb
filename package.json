@@ -1,0 +1,106 @@
+{
+  "name": "javascript-library-template",
+  "version": "0.0.0-development",
+  "private": false,
+  "description": "JavaScript library template to focus on ⌨️ coding, 🙌 collaborating and 🚀 shipping",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vvo/javascript-library-template.git"
+  },
+  "license": "MIT",
+  "author": "Vincent Voyer <vincent@codeagain.com>",
+  "main": "dist/",
+  "files": [
+    "dist/",
+    "lib/",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "babel lib/ -d dist/ --source-maps --ignore '**/*.test.js' --delete-dir-on-start",
+    "format": "prettier --write '**/*.*' && eslint . --fix",
+    "lint": "prettier --check '**/*.*' && eslint .",
+    "prepublishOnly": "yarn build",
+    "semantic-release": "semantic-release",
+    "test": "jest --coverage && yarn lint"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "12"
+          }
+        }
+      ]
+    ]
+  },
+  "prettier": {
+    "trailingComma": "all"
+  },
+  "eslintConfig": {
+    "env": {
+      "es6": true,
+      "jest": true,
+      "node": true
+    },
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaVersion": 2019,
+      "sourceType": "module"
+    },
+    "plugins": [
+      "jest"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:jest/recommended",
+      "plugin:import/recommended"
+    ],
+    "rules": {
+      "arrow-body-style": [
+        "error",
+        "always"
+      ],
+      "curly": "error",
+      "import/order": [
+        "error",
+        {
+          "newlines-between": "always"
+        }
+      ]
+    }
+  },
+  "jest": {},
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/cli": "7.10.1",
+    "@babel/core": "7.10.2",
+    "@babel/preset-env": "7.10.2",
+    "@types/jest": "26.0.0",
+    "babel-eslint": "10.1.0",
+    "babel-jest": "26.0.1",
+    "eslint": "7.2.0",
+    "eslint-plugin-import": "2.21.2",
+    "eslint-plugin-jest": "23.13.2",
+    "jest": "26.0.1",
+    "jest-date-mock": "1.0.8",
+    "prettier": "2.0.5",
+    "prettier-plugin-packagejson": "2.2.5",
+    "semantic-release": "17.0.8",
+    "semantic-release-cli": "5.3.1"
+  },
+  "renovate": {
+    "extends": [
+      "config:js-lib",
+      ":automergePatch",
+      ":automergeBranch",
+      ":automergePatch",
+      ":automergeBranch",
+      ":automergeLinters",
+      ":automergeTesters",
+      ":automergeTypes"
+    ]
+  }
+}
