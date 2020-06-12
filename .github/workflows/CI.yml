@@ -34,11 +34,3 @@ jobs:
         run: yarn --frozen-lockfile
       - name: Test
         run: yarn test
-      - name: Code coverage
-        uses: codecov/codecov-action@v1
-      - name: Release
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/next')
-        run: yarn semantic-release
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

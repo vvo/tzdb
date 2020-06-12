@@ -80,7 +80,7 @@
   },
   "renovate": {
     "extends": [
-      "config:js-lib",
+      "config:js-app",
       ":automergePatch",
       ":automergeBranch",
       ":automergePatch",
