@@ -10,7 +10,7 @@
   "license": "MIT",
   "author": "Vincent Voyer <vincent@codeagain.com>",
   "scripts": {
-    "build": "babel-node lib/index",
+    "build": "babel-node index",
     "format": "prettier --write '**/*.*' && eslint . --fix",
     "lint": "prettier --check '**/*.*' && eslint .",
     "test": "yarn lint"

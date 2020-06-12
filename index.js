@@ -7,7 +7,7 @@ import got from "got";
 import algoliasearch from "algoliasearch";
 import dotenv from "dotenv";
 import { DateTime } from "luxon";
-import { chunk } from "lodash";
+import { chunk, orderBy } from "lodash";
 import pEachSeries from "p-each-series";
 
 dotenv.config();
@@ -68,7 +68,7 @@ async function run() {
       const modificationDate = cityFields[18];
 
       const city = {
-        objectID: cityFields[0],
+        geonameId: cityFields[0],
         name: cityFields[1],
         countryName: countries[cityFields[8]],
         timezoneName: cityFields[17],
@@ -79,14 +79,20 @@ async function run() {
       cities.push(city);
 
       if (modificationDate > lastIndexUpdate) {
-        updatedCities.push(city);
+        updatedCities.push({
+          objectID: city.geonameId,
+          ...city,
+        });
       }
     }
   }
 
   fs.writeFileSync(
-    path.join(__dirname, "../cities.json"),
-    JSON.stringify(cities).replace(/},/g, "},\n"),
+    path.join(__dirname, "cities.json"),
+    JSON.stringify(orderBy(cities, "population", "desc")).replace(
+      /},/g,
+      "},\n",
+    ),
   );
 
   await pEachSeries(chunk(updatedCities, 500), async function saveToAlgolia(
@@ -101,7 +107,9 @@ async function run() {
     })
     .wait();
 
-  console.log(`Done, ${cities.length} cities were updated since last run`);
+  console.log(
+    `Done, ${updatedCities.length} cities were updated since last run`,
+  );
 }
 
 run().catch((error) => {
