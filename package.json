@@ -1,11 +1,11 @@
 {
-  "name": "algolia-timezone-db",
+  "name": "cities-timezone-db",
   "version": "0.0.0-development",
   "private": true,
   "description": "TODO",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vvo/algolia-timezone-db.git"
+    "url": "https://github.com/vvo/cities-timezone-db.git"
   },
   "license": "MIT",
   "author": "Vincent Voyer <vincent@codeagain.com>",

@@ -1,4 +1,4 @@
-# algolia-timezone-db [![GitHub license](https://img.shields.io/github/license/vvo/algolia-timezone-db?style=flat)](https://github.com/vvo/algolia-timezone-db/blob/master/LICENSE)
+# cities-timezone-db [![GitHub license](https://img.shields.io/github/license/vvo/cities-timezone-db?style=flat)](https://github.com/vvo/cities-timezone-db/blob/master/LICENSE)
 
 This is a list of major cities (population > 45,000) and their associated time zones.
 
