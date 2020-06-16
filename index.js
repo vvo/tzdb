@@ -68,7 +68,14 @@ async function run() {
   fs.writeFileSync(
     path.join(__dirname, "time-zones.json"),
     JSON.stringify(
-      orderBy(timeZones, ["offset", "offsetNameLong", "cityName"]),
+      orderBy(timeZones, ["offset", "offsetNameLong", "cityName"]).map(
+        ({ timeZoneName, formattedTimeZoneWithOffset }) => {
+          return {
+            timeZoneName,
+            formattedTimeZoneWithOffset,
+          };
+        },
+      ),
     ).replace(/},/g, "},\n"),
   );
 
@@ -109,7 +116,7 @@ async function run() {
       geonameId: cityFields[0],
       name: cityFields[1],
       countryName: countries[cityFields[8]],
-      timezoneName: cityFields[17],
+      timeZoneName: cityFields[17],
       population: parseInt(cityFields[14], 10),
       modificationDate,
     };
