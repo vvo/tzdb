@@ -31,13 +31,23 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
       - name: Yarn install
         run: yarn --frozen-lockfile
-      - name: Release
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/next')
-        run: yarn semantic-release
+      - name: Build
+        run: yarn build
         env:
           ALGOLIA_APPLICATION_ID: ${{ secrets.ALGOLIA_APPLICATION_ID }}
           ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}
           ALGOLIA_INDEX_NAME: ${{ secrets.ALGOLIA_INDEX_NAME }}
+      - name: Commit changes if necessary
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Automatic data update
+
+          # Optional glob pattern of files which should be added to the commit
+          file_pattern: cities.json time-zones.json
+      - name: Release if necessary
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/next')
+        run: yarn semantic-release
+        env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 

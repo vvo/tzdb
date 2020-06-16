@@ -18,8 +18,6 @@
     "build": "babel-node index",
     "format": "prettier --write '**/*.*' && eslint . --fix",
     "lint": "prettier --check '**/*.*' && eslint .",
-    "prepublishOnly": "yarn build",
-    "semantic-release": "semantic-release",
     "test": "yarn lint"
   },
   "babel": {
