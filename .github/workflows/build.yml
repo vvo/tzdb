@@ -1,4 +1,4 @@
-name: Build
+name: Maybe release
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
     - cron:  '*/15 * * * *'
 
 jobs:
-  ci:
+  release:
     runs-on: ubuntu-latest
 
     steps:
