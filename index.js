@@ -34,15 +34,42 @@ async function run() {
   const timeZonesParser = got
     .stream("http://download.geonames.org/export/dump/timeZones.txt")
     .pipe(parse({ delimiter: "\t", from_line: 2 }));
+
   const timeZones = [];
 
   for await (const timeZoneFields of timeZonesParser) {
-    timeZones.push(timeZoneFields[1]);
+    const timeZoneName = timeZoneFields[1];
+
+    const tz = DateTime.local().setLocale("en-US").setZone(timeZoneName);
+
+    if (tz.isValid !== true) {
+      console.error(
+        "Time zone data not accurate, please investigate",
+        tz.invalidReason,
+        timeZoneName,
+      );
+      continue;
+    }
+
+    const cityName = timeZoneName.split("/").pop().replace(/_/g, " ");
+
+    timeZones.push({
+      timeZoneName,
+      formattedTimeZoneWithOffset: tz.toFormat(
+        `'UTC' ZZ ZZZZZ - '${cityName}'`,
+      ),
+      offset: tz.offset,
+      offsetNameShort: tz.offsetNameShort,
+      offsetNameLong: tz.offsetNameLong,
+      cityName,
+    });
   }
 
   fs.writeFileSync(
     path.join(__dirname, "time-zones.json"),
-    JSON.stringify(timeZones.sort()).replace(/",/g, '",\n'),
+    JSON.stringify(
+      orderBy(timeZones, ["offset", "offsetNameLong", "cityName"]),
+    ).replace(/},/g, "},\n"),
   );
 
   const countriesParser = got
