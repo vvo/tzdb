@@ -66,15 +66,15 @@
     }
   },
   "dependencies": {
-    "@babel/node": "^7.10.1",
-    "algoliasearch": "^4.3.0",
-    "csv-parse": "^4.10.1",
-    "dotenv": "^8.2.0",
-    "got": "^11.3.0",
-    "lodash": "^4.17.15",
-    "luxon": "^1.24.1",
-    "p-each-series": "^2.1.0",
-    "unzipper": "^0.10.11"
+    "@babel/node": "7.10.1",
+    "algoliasearch": "4.3.0",
+    "csv-parse": "4.10.1",
+    "dotenv": "8.2.0",
+    "got": "11.3.0",
+    "lodash": "4.17.15",
+    "luxon": "1.24.1",
+    "p-each-series": "2.1.0",
+    "unzipper": "0.10.11"
   },
   "devDependencies": {
     "@babel/core": "7.10.2",
