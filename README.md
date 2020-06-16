@@ -2,10 +2,12 @@
 
 This is a list and npm package of:
 
-- all existing time zones names
-- major cities (population > 15,000) and their associated time zones
+- all existing [IANA time zones](https://www.iana.org/time-zones) names
+- and major cities (population > 15,000) with their associated time zones
 
-The data and npm packages are automatically updated whenever there are changes on https://www.geonames.org/.
+The data and npm packages are automatically updated whenever there are changes to https://www.geonames.org/ which is generated from IANA databases.
+
+This is useful whenever you want to build a time zone select menu in your application.
 
 ## Usage
 
