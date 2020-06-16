@@ -33,7 +33,7 @@ async function run() {
 
   const timeZonesParser = got
     .stream("http://download.geonames.org/export/dump/timeZones.txt")
-    .pipe(parse({ delimiter: "\t" }));
+    .pipe(parse({ delimiter: "\t", from_line: 2 }));
   const timeZones = [];
 
   for await (const timeZoneFields of timeZonesParser) {
