@@ -1,7 +1,6 @@
 {
   "name": "tzdb",
   "version": "0.0.0-development",
-  "private": true,
   "description": "TODO",
   "repository": {
     "type": "git",
