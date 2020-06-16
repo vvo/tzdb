@@ -1,10 +1,25 @@
-# cities-timezone-db [![GitHub license](https://img.shields.io/github/license/vvo/cities-timezone-db?style=flat)](https://github.com/vvo/cities-timezone-db/blob/master/LICENSE)
+# tzdb [![GitHub license](https://img.shields.io/github/license/vvo/tzdb?style=flat)](https://github.com/vvo/tzdb/blob/master/LICENSE) [![Tests](https://github.com/vvo/tzdb/workflows/CI/badge.svg)](https://github.com/vvo/tzdb/actions) ![npm](https://img.shields.io/npm/v/tzdb)
 
-This is a list of major cities (population > 45,000) and their associated time zones.
+This is a list and npm package of:
 
-## cities.json
+- all existing time zones names
+- major cities (population > 15,000) and their associated time zones
 
-You can either directly use the [cities.json](./cities.json?raw=true) output in your system.
+The data and npm packages are automatically updated whenever there are changes on https://www.geonames.org/.
+
+## Usage
+
+You can either directly use the:
+
+- [cities.json](./cities.json?raw=true)
+- and [time-zones.json](./time-zones.json?raw=true)
+
+Or use the `tzdb` npm package:
+
+```js
+import cities from "tzdb/cities.json";
+import timeZones from "tzdb/time-zones.json";
+```
 
 ## Algolia
 

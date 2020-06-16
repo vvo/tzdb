@@ -76,28 +76,24 @@ async function run() {
       process.exit(1);
     }
 
-    const population = parseInt(cityFields[14], 10);
+    const modificationDate = cityFields[18];
 
-    if (population > 45000) {
-      const modificationDate = cityFields[18];
+    const city = {
+      geonameId: cityFields[0],
+      name: cityFields[1],
+      countryName: countries[cityFields[8]],
+      timezoneName: cityFields[17],
+      population: parseInt(cityFields[14], 10),
+      modificationDate,
+    };
 
-      const city = {
-        geonameId: cityFields[0],
-        name: cityFields[1],
-        countryName: countries[cityFields[8]],
-        timezoneName: cityFields[17],
-        population,
-        modificationDate,
-      };
+    cities.push(city);
 
-      cities.push(city);
-
-      if (modificationDate > lastIndexUpdate) {
-        updatedCities.push({
-          objectID: city.geonameId,
-          ...city,
-        });
-      }
+    if (modificationDate > lastIndexUpdate) {
+      updatedCities.push({
+        objectID: city.geonameId,
+        ...city,
+      });
     }
   }
 
