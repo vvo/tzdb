@@ -40,7 +40,7 @@ jobs:
       - name: Commit changes if necessary
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: Automatic data update
+          commit_message: "feat(data): Automatic data update"
 
           # Optional glob pattern of files which should be added to the commit
           file_pattern: cities.json time-zones.json
