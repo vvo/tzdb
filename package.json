@@ -82,6 +82,9 @@
     "semantic-release-cli": "5.3.1",
     "unzipper": "0.10.11"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "renovate": {
     "extends": [
       "config:js-lib",
