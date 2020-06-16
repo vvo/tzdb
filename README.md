@@ -17,8 +17,8 @@ You can either directly use the:
 Or use the `tzdb` npm package:
 
 ```js
-import cities from "tzdb/cities.json";
-import timeZones from "tzdb/time-zones.json";
+import cities from "@vvo/tzdb/cities.json";
+import timeZones from "@vvo/tzdb/time-zones.json";
 ```
 
 ## Algolia
