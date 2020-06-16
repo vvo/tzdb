@@ -31,6 +31,20 @@ async function run() {
 
   const lastIndexUpdate = userData?.lastIndexUpdate || "1970-01-01";
 
+  const timeZonesParser = got
+    .stream("http://download.geonames.org/export/dump/timeZones.txt")
+    .pipe(parse({ delimiter: "\t" }));
+  const timeZones = [];
+
+  for await (const timeZoneFields of timeZonesParser) {
+    timeZones.push(timeZoneFields[1]);
+  }
+
+  fs.writeFileSync(
+    path.join(__dirname, "time-zones.json"),
+    JSON.stringify(timeZones.sort()).replace(/",/g, '",\n'),
+  );
+
   const countriesParser = got
     .stream("https://download.geonames.org/export/dump/countryInfo.txt")
     .pipe(parse({ delimiter: "\t" }));

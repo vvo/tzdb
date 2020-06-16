@@ -9,10 +9,17 @@
   },
   "license": "MIT",
   "author": "Vincent Voyer <vincent@codeagain.com>",
+  "files": [
+    "cities.json",
+    "time-zones.json",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "babel-node index",
     "format": "prettier --write '**/*.*' && eslint . --fix",
     "lint": "prettier --check '**/*.*' && eslint .",
+    "prepublishOnly": "yarn build",
+    "semantic-release": "semantic-release",
     "test": "yarn lint"
   },
   "babel": {
@@ -76,11 +83,13 @@
     "eslint": "7.2.0",
     "eslint-plugin-import": "2.21.2",
     "prettier": "2.0.5",
-    "prettier-plugin-packagejson": "2.2.5"
+    "prettier-plugin-packagejson": "2.2.5",
+    "semantic-release": "17.0.8",
+    "semantic-release-cli": "5.3.1"
   },
   "renovate": {
     "extends": [
-      "config:js-app",
+      "config:js-lib",
       ":automergePatch",
       ":automergeBranch",
       ":automergePatch",
