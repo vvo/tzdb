@@ -14,7 +14,7 @@ You can either directly use the:
 - [cities.json](./cities.json?raw=true)
 - and [time-zones.json](./time-zones.json?raw=true)
 
-Or use the `tzdb` npm package:
+Or use the `@vvo/tzdb` npm package:
 
 ```js
 import cities from "@vvo/tzdb/cities.json";
