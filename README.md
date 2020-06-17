@@ -12,7 +12,7 @@ This is useful whenever you want to build a time zone select menu in your applic
 
 ## Available data
 
-### simplified-time-zones.json
+### [simplified-time-zones.json](./simplified-time-zones.json)
 
 This is most probably what you're looking for if you're trying to build a good current time zones selector in your application.
 
@@ -34,7 +34,7 @@ Notes:
 - We provide offset names ("Pacific Time") without dst and remove "Standard" and "Daylight"
 - This can be used to build a good enough (Google calendar like) select box of time zones, but it's your responsibility to handle dst and real offsets
 
-### cities-with-time-zones.json
+### [cities-with-time-zones.json](./cities-with-time-zones.json)
 
 This is a list of major cities (population > 5,000) and their associated time zone information, ranked by population. This is useful if you want to build an application where the user will type a city and you want the time zone information out of it.
 
@@ -47,7 +47,7 @@ Example data:
 {"geonameId":"361058","name":"Alexandria","countryName":"Egypt","timeZoneName":"Africa/Cairo","timeZoneOffsetNameWithoutDst":"Eastern European Time","population":3811516,"modificationDate":"2019-09-05"},
 ```
 
-### time-zones-names.json
+### [time-zones-names.json](./time-zones-names.json)
 
 This is the raw list of all IANA time zones ranked by alphabetical order.
 
