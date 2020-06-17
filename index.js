@@ -68,6 +68,7 @@ async function run() {
     const name = cityFields[1];
     const population = parseInt(cityFields[14], 10);
     const countryCode = cityFields[8];
+    const alternateCityNames = cityFields[3].split(",");
 
     const timeZoneName = cityFields[17];
 
@@ -95,6 +96,10 @@ async function run() {
 
     cities.push(city);
     citiesPopulation[`${countryCode}${name}`] = population;
+
+    for (let alternateCityName of alternateCityNames) {
+      citiesPopulation[`${countryCode}${alternateCityName}`] = population;
+    }
 
     if (modificationDate > lastIndexUpdate) {
       updatedCities.push({
