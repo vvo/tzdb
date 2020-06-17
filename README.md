@@ -2,8 +2,8 @@
 
 This is a list and npm package of:
 
-- simplified IANA time zones and their offset names
-- all existing [IANA time zones](https://www.iana.org/time-zones) names
+- "simplified" [IANA time zones](https://www.iana.org/time-zones) and their offset names
+- all existing IANA time zones names
 - and major cities (population > 5,000) with their associated time zones and offset names
 
 The data and npm packages are **automatically updated** whenever there are changes to https://www.geonames.org/ which is generated from IANA databases.
@@ -14,7 +14,7 @@ This is useful whenever you want to build a time zone select menu in your applic
 
 ### simplified-time-zones.json
 
-This is most probably what you're looking for if you're trying to build a good time zone selector in your application.
+This is most probably what you're looking for if you're trying to build a good current time zones selector in your application.
 
 Example data:
 
