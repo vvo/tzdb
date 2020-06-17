@@ -1,2 +1,4 @@
 dist/
-cities.json
+cities-with-time-zones.json
+simplified-time-zones.json
+time-zones-names.json

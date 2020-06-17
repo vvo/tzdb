@@ -29,55 +29,8 @@ async function run() {
     .wait();
   const { userData } = await algoliaIndex.getSettings();
 
-  const lastIndexUpdate = userData?.lastIndexUpdate || "1970-01-01";
-
-  const timeZonesParser = got
-    .stream("http://download.geonames.org/export/dump/timeZones.txt")
-    .pipe(parse({ delimiter: "\t", from_line: 2 }));
-
-  const timeZones = [];
-
-  for await (const timeZoneFields of timeZonesParser) {
-    const timeZoneName = timeZoneFields[1];
-
-    const tz = DateTime.local().setLocale("en-US").setZone(timeZoneName);
-
-    if (tz.isValid !== true) {
-      console.error(
-        "Time zone data not accurate, please investigate",
-        tz.invalidReason,
-        timeZoneName,
-      );
-      continue;
-    }
-
-    const cityName = timeZoneName.split("/").pop().replace(/_/g, " ");
-
-    timeZones.push({
-      timeZoneName,
-      formattedTimeZoneWithOffset: tz.toFormat(
-        `'UTC' ZZ ZZZZZ - '${cityName}'`,
-      ),
-      offset: tz.offset,
-      offsetNameShort: tz.offsetNameShort,
-      offsetNameLong: tz.offsetNameLong,
-      cityName,
-    });
-  }
-
-  fs.writeFileSync(
-    path.join(__dirname, "time-zones.json"),
-    JSON.stringify(
-      orderBy(timeZones, ["offset", "offsetNameLong", "cityName"]).map(
-        ({ timeZoneName, formattedTimeZoneWithOffset }) => {
-          return {
-            timeZoneName,
-            formattedTimeZoneWithOffset,
-          };
-        },
-      ),
-    ).replace(/},/g, "},\n"),
-  );
+  const lastIndexUpdate =
+    process.env.LAST_INDEX_UPDATE || userData?.lastIndexUpdate || "1970-01-01";
 
   const countriesParser = got
     .stream("https://download.geonames.org/export/dump/countryInfo.txt")
@@ -99,6 +52,7 @@ async function run() {
   );
   const cities = [];
   const updatedCities = [];
+  const citiesPopulation = {};
 
   for await (const cityFields of citiesParser) {
     // http://download.geonames.org/export/dump/readme.txt geoname section has 19 fields
@@ -111,17 +65,36 @@ async function run() {
     }
 
     const modificationDate = cityFields[18];
+    const name = cityFields[1];
+    const population = parseInt(cityFields[14], 10);
+    const countryCode = cityFields[8];
+
+    const timeZoneName = cityFields[17];
+
+    const tz = DateTime.fromObject({
+      zone: timeZoneName,
+      day: 1,
+      month: 1,
+      locale: "en-US",
+    });
+
+    const timeZoneOffsetNameWithoutDst = tz
+      .toFormat(`ZZZZZ`)
+      .replace(/Standard Time/g, "Time")
+      .replace(/Daylight Time/g, "Time");
 
     const city = {
       geonameId: cityFields[0],
-      name: cityFields[1],
+      name,
       countryName: countries[cityFields[8]],
-      timeZoneName: cityFields[17],
-      population: parseInt(cityFields[14], 10),
+      timeZoneName,
+      timeZoneOffsetNameWithoutDst,
+      population,
       modificationDate,
     };
 
     cities.push(city);
+    citiesPopulation[`${countryCode}${name}`] = population;
 
     if (modificationDate > lastIndexUpdate) {
       updatedCities.push({
@@ -132,12 +105,125 @@ async function run() {
   }
 
   fs.writeFileSync(
-    path.join(__dirname, "cities.json"),
+    path.join(__dirname, "cities-with-time-zones.json"),
     JSON.stringify(orderBy(cities, "population", "desc")).replace(
       /},/g,
       "},\n",
     ),
   );
+
+  // Time zones
+
+  const rawTimeZones = [];
+
+  const timeZonesParser = got
+    .stream("http://download.geonames.org/export/dump/timeZones.txt")
+    .pipe(parse({ delimiter: "\t", from_line: 2 }));
+
+  const countryStats = {};
+
+  for await (const timeZoneFields of timeZonesParser) {
+    const timeZoneName = timeZoneFields[1];
+
+    const tz = DateTime.fromObject({
+      zone: timeZoneName,
+    });
+
+    if (tz.isValid !== true) {
+      console.error(
+        "Time zone data not accurate, please investigate",
+        tz.invalidReason,
+        timeZoneName,
+      );
+      continue;
+    }
+
+    rawTimeZones.push(timeZoneName);
+
+    const cityName = timeZoneName.split("/").pop().replace(/_/g, " ");
+    const countryCode = timeZoneFields[0];
+
+    const population = citiesPopulation[`${countryCode}${cityName}`] || 0;
+
+    const gmtOffset = timeZoneFields[2];
+    const dstOffset = timeZoneFields[3];
+    const rawOffset = timeZoneFields[4];
+
+    if (countryStats[countryCode] === undefined) {
+      countryStats[countryCode] = {};
+    }
+
+    const offsetKey = `${gmtOffset}${dstOffset}${rawOffset}`;
+
+    if (countryStats[countryCode][offsetKey] === undefined) {
+      countryStats[countryCode][offsetKey] = [];
+    }
+
+    countryStats[countryCode][offsetKey].push({
+      timeZoneName,
+      cityName,
+      population,
+    });
+  }
+
+  const simplifiedTimeZones = [];
+
+  for (let [, countryTimeZones] of Object.entries(countryStats)) {
+    for (let [, offsetCities] of Object.entries(countryTimeZones)) {
+      const cities = orderBy(offsetCities, "population", "desc").slice(0, 2);
+      const { timeZoneName, cityName } = cities[0];
+
+      const tz = DateTime.fromObject({
+        locale: "en-US",
+        zone: timeZoneName,
+        day: 1,
+        month: 1,
+      });
+
+      const importantCities = cities
+        .map(({ cityName }) => {
+          return cityName;
+        })
+        .join(", ");
+
+      const formatted = tz
+        .toFormat(`ZZ ZZZZZ - '${importantCities}'`)
+        .replace(/Standard Time/g, "Time")
+        .replace(/Daylight Time/g, "Time");
+
+      simplifiedTimeZones.push({
+        timeZoneName,
+        formatted,
+        offset: tz.offset,
+        offsetNameShort: tz.offsetNameShort,
+        offsetNameLong: tz.offsetNameLong,
+        cityName,
+      });
+    }
+  }
+
+  fs.writeFileSync(
+    path.join(__dirname, "time-zones-names.json"),
+    JSON.stringify(rawTimeZones.sort()).replace(/",/g, '",\n'),
+  );
+
+  fs.writeFileSync(
+    path.join(__dirname, "simplified-time-zones.json"),
+    JSON.stringify(
+      orderBy(simplifiedTimeZones, [
+        "offset",
+        "offsetNameLong",
+        "cityName",
+      ]).map(({ timeZoneName, formatted }) => {
+        return {
+          timeZoneName,
+          formatted,
+        };
+      }),
+    ).replace(/},/g, "},\n"),
+  );
+
+  // Algolia update
 
   await pEachSeries(chunk(updatedCities, 500), async function saveToAlgolia(
     citiesChunk,
