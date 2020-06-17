@@ -171,6 +171,10 @@ async function run() {
   for (let [, countryTimeZones] of Object.entries(countryStats)) {
     for (let [, offsetCities] of Object.entries(countryTimeZones)) {
       const cities = orderBy(offsetCities, "population", "desc").slice(0, 2);
+      const group = offsetCities.map(({ timeZoneName }) => {
+        return timeZoneName;
+      });
+
       const { timeZoneName, cityName } = cities[0];
 
       const tz = DateTime.fromObject({
@@ -194,6 +198,7 @@ async function run() {
       simplifiedTimeZones.push({
         timeZoneName,
         formatted,
+        group,
         offset: tz.offset,
         offsetNameShort: tz.offsetNameShort,
         offsetNameLong: tz.offsetNameLong,
@@ -214,10 +219,11 @@ async function run() {
         "offset",
         "offsetNameLong",
         "cityName",
-      ]).map(({ timeZoneName, formatted }) => {
+      ]).map(({ timeZoneName, formatted, group }) => {
         return {
           timeZoneName,
           formatted,
+          group,
         };
       }),
     ).replace(/},/g, "},\n"),
