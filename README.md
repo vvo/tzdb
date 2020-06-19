@@ -39,9 +39,7 @@ Example data:
 {
   "timeZoneName":"America/Los_Angeles",
   "formatted":"-08:00 Pacific Time - Los Angeles",
-  "group":[
-    "America/Los_Angeles"
-  ]
+  "group":["America/Los_Angeles"]
 },
 ```
 
