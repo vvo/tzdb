@@ -19,10 +19,30 @@ This is most probably what you're looking for if you're trying to build a good c
 Example data:
 
 ```js
-{"timeZoneName":"America/Los_Angeles","formatted":"-08:00 Pacific Time - Los Angeles"},
-{"timeZoneName":"America/Tijuana","formatted":"-08:00 Pacific Time - Tijuana"},
-{"timeZoneName":"America/Vancouver","formatted":"-08:00 Pacific Time - Vancouver"},
-{"timeZoneName":"America/Whitehorse","formatted":"-08:00 Pacific Time - Whitehorse, Dawson"},
+{
+  "timeZoneName":"America/Anchorage",
+  "formatted":"-09:00 Alaska Time - Anchorage, Juneau",
+  "group":[
+    "America/Anchorage",
+    "America/Juneau",
+    "America/Metlakatla",
+    "America/Nome",
+    "America/Sitka",
+    "America/Yakutat"
+  ]
+},
+{
+  "timeZoneName":"Pacific/Gambier",
+  "formatted":"-09:00 Gambier Time - Gambier",
+  "group":["Pacific/Gambier"]
+},
+{
+  "timeZoneName":"America/Los_Angeles",
+  "formatted":"-08:00 Pacific Time - Los Angeles",
+  "group":[
+    "America/Los_Angeles"
+  ]
+},
 ```
 
 As you can see, we provide the time zone name and a pre-formatted version using more common offset names.
@@ -41,10 +61,42 @@ This is a list of major cities (population > 5,000) and their associated time zo
 Example data:
 
 ```js
-{"geonameId":"5368361","name":"Los Angeles","countryName":"United States","timeZoneName":"America/Los_Angeles","timeZoneOffsetNameWithoutDst":"Pacific Time","population":3971883,"modificationDate":"2019-12-12"},
-{"geonameId":"1205733","name":"Chittagong","countryName":"Bangladesh","timeZoneName":"Asia/Dhaka","timeZoneOffsetNameWithoutDst":"Bangladesh Time","population":3920222,"modificationDate":"2016-11-09"},
-{"geonameId":"1804651","name":"Kunming","countryName":"China","timeZoneName":"Asia/Shanghai","timeZoneOffsetNameWithoutDst":"China Time","population":3855346,"modificationDate":"2014-08-14"},
-{"geonameId":"361058","name":"Alexandria","countryName":"Egypt","timeZoneName":"Africa/Cairo","timeZoneOffsetNameWithoutDst":"Eastern European Time","population":3811516,"modificationDate":"2019-09-05"},
+{
+  "geonameId":"5368361",
+  "name":"Los Angeles",
+  "countryName":"United States",
+  "timeZoneName":"America/Los_Angeles",
+  "timeZoneOffsetNameWithoutDst":"Pacific Time",
+  "population":3971883,
+  "modificationDate":"2019-12-12"
+},
+{
+  "geonameId":"1205733",
+  "name":"Chittagong",
+  "countryName":"Bangladesh",
+  "timeZoneName":"Asia/Dhaka",
+  "timeZoneOffsetNameWithoutDst":"Bangladesh Time",
+  "population":3920222,
+  "modificationDate":"2016-11-09"
+},
+{
+  "geonameId":"1804651",
+  "name":"Kunming",
+  "countryName":"China",
+  "timeZoneName":"Asia/Shanghai",
+  "timeZoneOffsetNameWithoutDst":"China Time",
+  "population":3855346,
+  "modificationDate":"2014-08-14"
+},
+{
+  "geonameId":"361058",
+  "name":"Alexandria",
+  "countryName":"Egypt",
+  "timeZoneName":"Africa/Cairo",
+  "timeZoneOffsetNameWithoutDst":"Eastern European Time",
+  "population":3811516,
+  "modificationDate":"2019-09-05"
+},
 ```
 
 ### [time-zones-names.json](./time-zones-names.json)
