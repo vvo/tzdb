@@ -64,9 +64,9 @@
     }
   },
   "devDependencies": {
-    "@babel/core": "7.10.2",
-    "@babel/node": "7.10.1",
-    "@babel/preset-env": "7.10.2",
+    "@babel/core": "7.10.3",
+    "@babel/node": "7.10.3",
+    "@babel/preset-env": "7.10.3",
     "algoliasearch": "4.3.0",
     "babel-eslint": "10.1.0",
     "csv-parse": "4.10.1",
