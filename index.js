@@ -185,24 +185,26 @@ async function run() {
 
       const { timeZoneName, name: mainCityName } = mainCitiesObject[0];
 
-      const tz = DateTime.fromObject({
+      const januaryDate = DateTime.fromObject({
         locale: "en-US",
         zone: timeZoneName,
         day: 1,
         month: 1,
       });
 
-      const alternativeTimeZoneName = tz
+      const currentDate = DateTime.fromObject({
+        locale: "en-US",
+        zone: timeZoneName,
+      });
+
+      const alternativeTimeZoneName = januaryDate
         .toFormat(`ZZZZZ`)
         .replace(/Standard Time/g, "Time")
         .replace(/Daylight Time/g, "Time");
 
-      const formatted = tz
-        .toFormat(
-          `ZZ '${alternativeTimeZoneName}' - '${mainCities.join(", ")}'`,
-        )
-        .replace(/Standard Time/g, "Time")
-        .replace(/Daylight Time/g, "Time");
+      const formatted = currentDate.toFormat(
+        `ZZ '${alternativeTimeZoneName}' - '${mainCities.join(", ")}'`,
+      );
 
       simplifiedTimeZones.push({
         name: timeZoneName,
@@ -210,8 +212,7 @@ async function run() {
         formatted,
         group,
         mainCities,
-        offset: tz.offset,
-        offsetNameLong: tz.offsetNameLong,
+        offset: januaryDate.offset,
         mainCityName,
       });
     }
@@ -227,7 +228,7 @@ async function run() {
     JSON.stringify(
       orderBy(simplifiedTimeZones, [
         "offset",
-        "offsetNameLong",
+        "alternativeName",
         "mainCityName",
       ]).map(({ name, alternativeName, mainCities, formatted, group }) => {
         return {
