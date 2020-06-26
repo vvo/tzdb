@@ -203,7 +203,9 @@ async function run() {
         .replace(/Daylight Time/g, "Time");
 
       const formatted = currentDate.toFormat(
-        `ZZ '${alternativeTimeZoneName}' - '${mainCities.join(", ")}'`,
+        `ZZ '${alternativeTimeZoneName}' - '${mainCities
+          .join(", ")
+          .replace(/'/g, "''")}'`,
       );
 
       simplifiedTimeZones.push({
