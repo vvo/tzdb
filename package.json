@@ -1,7 +1,7 @@
 {
   "name": "@vvo/tzdb",
   "version": "0.0.0-development",
-  "description": "Automatically updated npm package of all IANA time zones and major cities",
+  "description": "Simplified, grouped and always up to date list of time zones, with major cities",
   "repository": {
     "type": "git",
     "url": "https://github.com/vvo/tzdb.git"
