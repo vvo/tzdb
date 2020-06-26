@@ -11,6 +11,5 @@
 !*.yml
 /coverage/
 /dist/
-cities-with-time-zones.json
 time-zones-names.json
 simplified-time-zones.json

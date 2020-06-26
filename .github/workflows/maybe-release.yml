@@ -43,7 +43,7 @@ jobs:
           commit_message: "feat(data): Automatic data update"
 
           # Optional glob pattern of files which should be added to the commit
-          file_pattern: cities-with-time-zones.json simplified-time-zones.json time-zones-names.json
+          file_pattern: simplified-time-zones.json time-zones-names.json
       - name: Release if necessary
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/next'
         run: yarn semantic-release

@@ -9,7 +9,6 @@
   "license": "MIT",
   "author": "Vincent Voyer <vincent@codeagain.com>",
   "files": [
-    "cities-with-time-zones.json",
     "time-zones-names.json",
     "simplified-time-zones.json",
     "LICENSE"

@@ -2,9 +2,8 @@
 
 This is a list and npm package of:
 
-- "simplified" [IANA time zones](https://www.iana.org/time-zones) and their offset names
-- all existing IANA time zones names
-- and major cities (population > 5,000) with their associated time zones and offset names
+- "simplified" [IANA time zones](https://www.iana.org/time-zones) with their alternative names like `Pacific Time` instead of `America/Los_Angeles`, along with major cities for each time zone.
+- all existing raw IANA time zones names
 
 The data and npm packages are **automatically updated** whenever there are changes to https://www.geonames.org/ which is generated from IANA databases.
 
@@ -19,28 +18,38 @@ This is most probably what you're looking for if you're trying to build a good c
 Example data:
 
 ```js
-{
-  "timeZoneName":"America/Anchorage",
-  "formatted":"-09:00 Alaska Time - Anchorage, Juneau",
-  "group":[
-    "America/Anchorage",
-    "America/Juneau",
-    "America/Metlakatla",
-    "America/Nome",
-    "America/Sitka",
-    "America/Yakutat"
-  ]
-},
-{
-  "timeZoneName":"Pacific/Gambier",
-  "formatted":"-09:00 Gambier Time - Gambier",
-  "group":["Pacific/Gambier"]
-},
-{
-  "timeZoneName":"America/Los_Angeles",
-  "formatted":"-08:00 Pacific Time - Los Angeles",
-  "group":["America/Los_Angeles"]
-},
+[
+  // ...
+  {
+    name: "America/Anchorage",
+    alternativeName: "Alaska Time",
+    mainCities: ["Anchorage", "Juneau"],
+    formatted: "-09:00 Alaska Time - Anchorage, Juneau",
+    group: [
+      "America/Anchorage",
+      "America/Juneau",
+      "America/Metlakatla",
+      "America/Nome",
+      "America/Sitka",
+      "America/Yakutat",
+    ],
+  },
+  {
+    name: "Pacific/Gambier",
+    alternativeName: "Gambier Time",
+    mainCities: ["Gambier"],
+    formatted: "-09:00 Gambier Time - Gambier",
+    group: ["Pacific/Gambier"],
+  },
+  {
+    name: "America/Los_Angeles",
+    alternativeName: "Pacific Time",
+    mainCities: ["Los Angeles", "San Diego"],
+    formatted: "-08:00 Pacific Time - Los Angeles, San Diego",
+    group: ["America/Los_Angeles"],
+  },
+  // ...
+];
 ```
 
 As you can see, we provide the time zone name and a pre-formatted version using more common offset names.
@@ -52,51 +61,6 @@ Notes:
 - We provide offset names ("Pacific Time") without dst and remove "Standard" and "Daylight"
 - This can be used to build a good enough (Google calendar like) select box of time zones, but it's your responsibility to handle dst and real offsets
 
-### [cities-with-time-zones.json](./cities-with-time-zones.json)
-
-This is a list of major cities (population > 5,000) and their associated time zone information, ranked by population. This is useful if you want to build an application where the user will type a city and you want the time zone information out of it.
-
-Example data:
-
-```js
-{
-  "geonameId":"5368361",
-  "name":"Los Angeles",
-  "countryName":"United States",
-  "timeZoneName":"America/Los_Angeles",
-  "timeZoneOffsetNameWithoutDst":"Pacific Time",
-  "population":3971883,
-  "modificationDate":"2019-12-12"
-},
-{
-  "geonameId":"1205733",
-  "name":"Chittagong",
-  "countryName":"Bangladesh",
-  "timeZoneName":"Asia/Dhaka",
-  "timeZoneOffsetNameWithoutDst":"Bangladesh Time",
-  "population":3920222,
-  "modificationDate":"2016-11-09"
-},
-{
-  "geonameId":"1804651",
-  "name":"Kunming",
-  "countryName":"China",
-  "timeZoneName":"Asia/Shanghai",
-  "timeZoneOffsetNameWithoutDst":"China Time",
-  "population":3855346,
-  "modificationDate":"2014-08-14"
-},
-{
-  "geonameId":"361058",
-  "name":"Alexandria",
-  "countryName":"Egypt",
-  "timeZoneName":"Africa/Cairo",
-  "timeZoneOffsetNameWithoutDst":"Eastern European Time",
-  "population":3811516,
-  "modificationDate":"2019-09-05"
-},
-```
-
 ### [time-zones-names.json](./time-zones-names.json)
 
 This is the raw list of all IANA time zones ranked by alphabetical order.
@@ -104,15 +68,19 @@ This is the raw list of all IANA time zones ranked by alphabetical order.
 Example data:
 
 ```js
-"America/La_Paz",
-"America/Lima",
-"America/Los_Angeles",
-"America/Lower_Princes",
-"America/Maceio",
-"America/Managua",
-"America/Manaus",
-"America/Marigot",
-"America/Martinique",
+[
+  // ...
+  "America/La_Paz",
+  "America/Lima",
+  "America/Los_Angeles",
+  "America/Lower_Princes",
+  "America/Maceio",
+  "America/Managua",
+  "America/Manaus",
+  "America/Marigot",
+  "America/Martinique",
+  // ...
+];
 ```
 
 ## NPM package
@@ -126,12 +94,11 @@ npm add @vvo/tzdb
 Usage:
 
 ```js
-import cities from "@vvo/tzdb/cities-with-time-zones.json";
-import simplifiedTimeZones from "@vvo/tzdb/simplified-time-zones.json";
 import timeZones from "@vvo/tzdb/time-zones-names.json";
+import simplifiedTimeZones from "@vvo/tzdb/simplified-time-zones.json";
 ```
 
-## Algolia
+## [BETA] Algolia
 
 You can store cities information on a search engine like [Algolia](http://algolia.com/). There's a `yarn build` command you can use if you clone this repository to create your own Algolia index. The expected environment variables are:
 

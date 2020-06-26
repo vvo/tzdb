@@ -7,7 +7,7 @@ import got from "got";
 import algoliasearch from "algoliasearch";
 import dotenv from "dotenv";
 import { DateTime } from "luxon";
-import { chunk, orderBy } from "lodash";
+import { chunk, orderBy, uniq } from "lodash";
 import pEachSeries from "p-each-series";
 
 dotenv.config();
@@ -50,9 +50,8 @@ async function run() {
       delimiter: "\t",
     }),
   );
-  const cities = [];
   const updatedCities = [];
-  const citiesPopulation = {};
+  const timeZoneCities = {};
 
   for await (const cityFields of citiesParser) {
     // http://download.geonames.org/export/dump/readme.txt geoname section has 19 fields
@@ -68,9 +67,17 @@ async function run() {
     const name = cityFields[1];
     const population = parseInt(cityFields[14], 10);
     const countryCode = cityFields[8];
-    const alternateCityNames = cityFields[3].split(",");
 
     const timeZoneName = cityFields[17];
+    timeZoneCities[countryCode] = timeZoneCities[countryCode] || {};
+    timeZoneCities[countryCode][timeZoneName] =
+      timeZoneCities[countryCode][timeZoneName] || [];
+
+    timeZoneCities[countryCode][timeZoneName].push({
+      name,
+      population,
+      timeZoneName,
+    });
 
     const tz = DateTime.fromObject({
       zone: timeZoneName,
@@ -79,7 +86,7 @@ async function run() {
       locale: "en-US",
     });
 
-    const timeZoneOffsetNameWithoutDst = tz
+    const alternativeTimeZoneName = tz
       .toFormat(`ZZZZZ`)
       .replace(/Standard Time/g, "Time")
       .replace(/Daylight Time/g, "Time");
@@ -89,17 +96,10 @@ async function run() {
       name,
       countryName: countries[cityFields[8]],
       timeZoneName,
-      timeZoneOffsetNameWithoutDst,
+      alternativeTimeZoneName,
       population,
       modificationDate,
     };
-
-    cities.push(city);
-    citiesPopulation[`${countryCode}${name}`] = population;
-
-    for (let alternateCityName of alternateCityNames) {
-      citiesPopulation[`${countryCode}${alternateCityName}`] = population;
-    }
 
     if (modificationDate > lastIndexUpdate) {
       updatedCities.push({
@@ -108,14 +108,6 @@ async function run() {
       });
     }
   }
-
-  fs.writeFileSync(
-    path.join(__dirname, "cities-with-time-zones.json"),
-    JSON.stringify(orderBy(cities, "population", "desc")).replace(
-      /},/g,
-      "},\n",
-    ),
-  );
 
   // Time zones
 
@@ -145,10 +137,7 @@ async function run() {
 
     rawTimeZones.push(timeZoneName);
 
-    const cityName = timeZoneName.split("/").pop().replace(/_/g, " ");
     const countryCode = timeZoneFields[0];
-
-    const population = citiesPopulation[`${countryCode}${cityName}`] || 0;
 
     const gmtOffset = timeZoneFields[2];
     const dstOffset = timeZoneFields[3];
@@ -164,23 +153,37 @@ async function run() {
       countryStats[countryCode][offsetKey] = [];
     }
 
-    countryStats[countryCode][offsetKey].push({
-      timeZoneName,
-      cityName,
-      population,
-    });
+    if (timeZoneCities?.[countryCode]?.[timeZoneName] !== undefined) {
+      countryStats[countryCode][offsetKey].push(
+        ...timeZoneCities[countryCode][timeZoneName],
+      );
+    } else {
+      countryStats[countryCode][offsetKey].push({
+        name: timeZoneName.split("/").pop().replace(/_/g, " "),
+        population: 10000,
+        timeZoneName,
+      });
+    }
   }
 
   const simplifiedTimeZones = [];
 
   for (let [, countryTimeZones] of Object.entries(countryStats)) {
-    for (let [, offsetCities] of Object.entries(countryTimeZones)) {
-      const cities = orderBy(offsetCities, "population", "desc").slice(0, 2);
-      const group = offsetCities.map(({ timeZoneName }) => {
-        return timeZoneName;
+    for (let [, timeZoneWithCities] of Object.entries(countryTimeZones)) {
+      const orderedCities = orderBy(timeZoneWithCities, "population", "desc");
+
+      const mainCitiesObject = orderedCities.slice(0, 2);
+      const mainCities = mainCitiesObject.map(({ name }) => {
+        return name;
       });
 
-      const { timeZoneName, cityName } = cities[0];
+      const group = uniq(
+        timeZoneWithCities.map(({ timeZoneName }) => {
+          return timeZoneName;
+        }),
+      );
+
+      const { timeZoneName, name: mainCityName } = mainCitiesObject[0];
 
       const tz = DateTime.fromObject({
         locale: "en-US",
@@ -189,25 +192,27 @@ async function run() {
         month: 1,
       });
 
-      const importantCities = cities
-        .map(({ cityName }) => {
-          return cityName;
-        })
-        .join(", ");
+      const alternativeTimeZoneName = tz
+        .toFormat(`ZZZZZ`)
+        .replace(/Standard Time/g, "Time")
+        .replace(/Daylight Time/g, "Time");
 
       const formatted = tz
-        .toFormat(`ZZ ZZZZZ - '${importantCities}'`)
+        .toFormat(
+          `ZZ '${alternativeTimeZoneName}' - '${mainCities.join(", ")}'`,
+        )
         .replace(/Standard Time/g, "Time")
         .replace(/Daylight Time/g, "Time");
 
       simplifiedTimeZones.push({
-        timeZoneName,
+        name: timeZoneName,
+        alternativeName: alternativeTimeZoneName,
         formatted,
         group,
+        mainCities,
         offset: tz.offset,
-        offsetNameShort: tz.offsetNameShort,
         offsetNameLong: tz.offsetNameLong,
-        cityName,
+        mainCityName,
       });
     }
   }
@@ -223,10 +228,12 @@ async function run() {
       orderBy(simplifiedTimeZones, [
         "offset",
         "offsetNameLong",
-        "cityName",
-      ]).map(({ timeZoneName, formatted, group }) => {
+        "mainCityName",
+      ]).map(({ name, alternativeName, mainCities, formatted, group }) => {
         return {
-          timeZoneName,
+          name,
+          alternativeName,
+          mainCities,
           formatted,
           group,
         };
