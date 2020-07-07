@@ -255,7 +255,7 @@
 {"name":"Antarctica/Davis","alternativeName":"Davis Time","mainCities":["Davis"],"formatted":"+07:00 Davis Time - Davis","group":["Antarctica/Davis"]},
 {"name":"Asia/Hovd","alternativeName":"Hovd Time","mainCities":["Khovd","Ölgii"],"formatted":"+07:00 Hovd Time - Khovd, Ölgii","group":["Asia/Hovd"]},
 {"name":"Asia/Bangkok","alternativeName":"Indochina Time","mainCities":["Bangkok","Samut Prakan"],"formatted":"+07:00 Indochina Time - Bangkok, Samut Prakan","group":["Asia/Bangkok"]},
-{"name":"Asia/Ho_Chi_Minh","alternativeName":"Indochina Time","mainCities":["Ho Chi Minh City","Hanoi"],"formatted":"+07:00 Indochina Time - Ho Chi Minh City, Hanoi","group":["Asia/Ho_Chi_Minh"]},
+{"name":"Asia/Ho_Chi_Minh","alternativeName":"Indochina Time","mainCities":["Ho Chi Minh City","Da Nang"],"formatted":"+07:00 Indochina Time - Ho Chi Minh City, Da Nang","group":["Asia/Ho_Chi_Minh"]},
 {"name":"Asia/Phnom_Penh","alternativeName":"Indochina Time","mainCities":["Phnom Penh","Takeo"],"formatted":"+07:00 Indochina Time - Phnom Penh, Takeo","group":["Asia/Phnom_Penh"]},
 {"name":"Asia/Vientiane","alternativeName":"Indochina Time","mainCities":["Vientiane","Pakse"],"formatted":"+07:00 Indochina Time - Vientiane, Pakse","group":["Asia/Vientiane"]},
 {"name":"Asia/Novosibirsk","alternativeName":"Novosibirsk Time","mainCities":["Novosibirsk","Krasnoyarsk"],"formatted":"+07:00 Novosibirsk Time - Novosibirsk, Krasnoyarsk","group":["Asia/Barnaul","Asia/Krasnoyarsk","Asia/Novokuznetsk","Asia/Novosibirsk","Asia/Tomsk"]},
