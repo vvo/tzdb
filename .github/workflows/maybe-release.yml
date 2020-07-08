@@ -31,8 +31,8 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
       - name: Yarn install
         run: yarn --frozen-lockfile
-      - name: Build
-        run: yarn build
+      - name: Generate new data
+        run: yarn generate
         env:
           ALGOLIA_APPLICATION_ID: ${{ secrets.ALGOLIA_APPLICATION_ID }}
           ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}

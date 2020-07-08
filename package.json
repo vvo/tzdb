@@ -23,7 +23,7 @@
     "generate": "babel-node generate.js",
     "lint": "prettier --check '**/*.*' && eslint .",
     "prepublishOnly": "yarn build",
-    "test": "yarn lint"
+    "test": "yarn lint && yarn build"
   },
   "babel": {
     "presets": [
