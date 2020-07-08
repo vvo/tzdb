@@ -230,7 +230,7 @@ async function run() {
         name: timeZoneName,
         alternativeName: alternativeTimeZoneName,
         group,
-        country: countries[countryCode],
+        countryName: countries[countryCode],
         mainCities,
         rawOffsetInMinutes: parseFloat(
           timeZonesInfo[timeZoneName].rawOffset * 60,
@@ -261,7 +261,7 @@ async function run() {
         ({
           name,
           alternativeName,
-          country,
+          countryName,
           mainCities,
           group,
           rawOffsetInMinutes,
@@ -270,7 +270,7 @@ async function run() {
           return {
             name,
             alternativeName,
-            country,
+            countryName,
             mainCities,
             group,
             rawOffsetInMinutes,
