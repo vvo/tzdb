@@ -23,7 +23,7 @@ Example data:
   {
     name: "America/Anchorage",
     alternativeName: "Alaska Time",
-    country: "United States",
+    countryName: "United States",
     mainCities: ["Anchorage", "Juneau"],
     formatted: "-09:00 Alaska Time - Anchorage, Juneau",
     group: [
@@ -38,7 +38,7 @@ Example data:
   {
     name: "Pacific/Gambier",
     alternativeName: "Gambier Time",
-    country: "French Polynesia",
+    countryName: "French Polynesia",
     mainCities: ["Gambier"],
     formatted: "-09:00 Gambier Time - Gambier",
     group: ["Pacific/Gambier"],
@@ -46,7 +46,7 @@ Example data:
   {
     name: "America/Los_Angeles",
     alternativeName: "Pacific Time",
-    country: "United States",
+    countryName: "United States",
     mainCities: ["Los Angeles", "San Diego"],
     formatted: "-08:00 Pacific Time - Los Angeles, San Diego",
     group: ["America/Los_Angeles"],
