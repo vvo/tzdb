@@ -190,7 +190,7 @@ async function run() {
 
   const simplifiedTimeZones = [];
 
-  for (let [, countryTimeZones] of Object.entries(countryStats)) {
+  for (let [countryCode, countryTimeZones] of Object.entries(countryStats)) {
     for (let [, timeZoneWithCities] of Object.entries(countryTimeZones)) {
       const orderedCities = orderBy(timeZoneWithCities, "population", "desc");
 
@@ -230,6 +230,7 @@ async function run() {
         name: timeZoneName,
         alternativeName: alternativeTimeZoneName,
         group,
+        country: countries[countryCode],
         mainCities,
         rawOffsetInMinutes: parseFloat(
           timeZonesInfo[timeZoneName].rawOffset * 60,
@@ -260,6 +261,7 @@ async function run() {
         ({
           name,
           alternativeName,
+          country,
           mainCities,
           group,
           rawOffsetInMinutes,
@@ -268,6 +270,7 @@ async function run() {
           return {
             name,
             alternativeName,
+            country,
             mainCities,
             group,
             rawOffsetInMinutes,
