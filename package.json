@@ -68,6 +68,9 @@
       ]
     }
   },
+  "dependencies": {
+    "luxon": "1.24.1"
+  },
   "devDependencies": {
     "@babel/cli": "7.10.4",
     "@babel/core": "7.10.4",
@@ -81,7 +84,6 @@
     "eslint-plugin-import": "2.22.0",
     "got": "11.4.0",
     "lodash": "4.17.15",
-    "luxon": "1.24.1",
     "p-each-series": "2.1.0",
     "prettier": "2.0.5",
     "prettier-plugin-packagejson": "2.2.5",
