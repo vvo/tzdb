@@ -8,15 +8,21 @@
   },
   "license": "MIT",
   "author": "Vincent Voyer <vincent@codeagain.com>",
+  "main": "dist/",
   "files": [
+    "dist/",
+    "lib/",
     "time-zones-names.json",
     "simplified-time-zones.json",
-    "LICENSE"
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
-    "build": "babel-node index",
+    "build": "babel lib/ -d dist/ --source-maps --ignore '**/*.test.js' --delete-dir-on-start",
     "format": "prettier --write '**/*.*' && eslint . --fix",
+    "generate": "babel-node generate.js",
     "lint": "prettier --check '**/*.*' && eslint .",
+    "prepublishOnly": "yarn build",
     "test": "yarn lint"
   },
   "babel": {
@@ -62,7 +68,11 @@
       ]
     }
   },
+  "dependencies": {
+    "luxon": "1.24.1"
+  },
   "devDependencies": {
+    "@babel/cli": "7.10.4",
     "@babel/core": "7.10.4",
     "@babel/node": "7.10.4",
     "@babel/preset-env": "7.10.4",
@@ -72,9 +82,8 @@
     "dotenv": "8.2.0",
     "eslint": "7.4.0",
     "eslint-plugin-import": "2.22.0",
-    "got": "11.4.0",
+    "got": "11.5.0",
     "lodash": "4.17.15",
-    "luxon": "1.24.1",
     "p-each-series": "2.1.0",
     "prettier": "2.0.5",
     "prettier-plugin-packagejson": "2.2.5",
