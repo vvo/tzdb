@@ -177,6 +177,17 @@ async function run() {
     }
   }
 
+  // Node.js can't seem to get nice alt names for these zones for now
+  const alternativeNameCorrections = {
+    "Antarctica/Palmer": "Chile Time",
+    "America/Punta_Arenas": "Chile Time",
+    "Africa/Casablanca": "Western European Time",
+    "Africa/El_Aaiun": "Western European Time",
+    "Europe/Istanbul": "Turkey Time",
+    "Asia/Urumqi": "China Time",
+    "Pacific/Bougainville": "Bougainville Time",
+  };
+
   const simplifiedTimeZones = [];
 
   for (let [, countryTimeZones] of Object.entries(countryStats)) {
@@ -203,10 +214,17 @@ async function run() {
         month: 1,
       });
 
-      const alternativeTimeZoneName = januaryDate
+      let alternativeTimeZoneName = januaryDate
         .toFormat(`ZZZZZ`)
         .replace(/Standard Time/g, "Time")
         .replace(/Daylight Time/g, "Time");
+
+      // there are some cases where Node.js tz data won't be giving actual alternative names
+      // for time zones and instead will send GMT +03:00, so we fix that
+      if (/^GMT[+-]\d{2}:\d{2}$/.test(alternativeTimeZoneName)) {
+        alternativeTimeZoneName =
+          alternativeNameCorrections[timeZoneName] || timeZoneName;
+      }
 
       const simplifiedTimeZone = {
         name: timeZoneName,
