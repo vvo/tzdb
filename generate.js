@@ -10,6 +10,8 @@ import { DateTime } from "luxon";
 import { chunk, orderBy, uniq } from "lodash";
 import pEachSeries from "p-each-series";
 
+import formatTimeZone from "./lib/formatTimeZone.js";
+
 dotenv.config();
 
 async function run() {
@@ -112,6 +114,7 @@ async function run() {
   // Time zones
 
   const rawTimeZones = [];
+  const timeZonesInfo = {};
 
   const timeZonesParser = got
     .stream("http://download.geonames.org/export/dump/timeZones.txt")
@@ -143,6 +146,13 @@ async function run() {
     const dstOffset = timeZoneFields[3];
     const rawOffset = timeZoneFields[4];
 
+    // there's no "easy way" to get all the raw offset from time zones (when not in DST) because DST times
+    // are happening at various dates given countries (GOOD JOB GOVERNEMENTS!). Since geonames provides it,
+    // we save it for later usage
+    timeZonesInfo[timeZoneName] = {
+      rawOffset,
+    };
+
     if (countryStats[countryCode] === undefined) {
       countryStats[countryCode] = {};
     }
@@ -159,6 +169,7 @@ async function run() {
       );
     } else {
       countryStats[countryCode][offsetKey].push({
+        // we push a default city in case we have no cities present in timeZoneCities
         name: timeZoneName.split("/").pop().replace(/_/g, " "),
         population: 10000,
         timeZoneName,
@@ -192,28 +203,25 @@ async function run() {
         month: 1,
       });
 
-      const currentDate = DateTime.fromObject({
-        locale: "en-US",
-        zone: timeZoneName,
-      });
-
       const alternativeTimeZoneName = januaryDate
         .toFormat(`ZZZZZ`)
         .replace(/Standard Time/g, "Time")
         .replace(/Daylight Time/g, "Time");
 
-      const formatted = currentDate
-        .toFormat(`ZZ '${alternativeTimeZoneName}' - '__MAIN_CITIES__'`)
-        .replace("__MAIN_CITIES__", mainCities.join(", "));
-
-      simplifiedTimeZones.push({
+      const simplifiedTimeZone = {
         name: timeZoneName,
         alternativeName: alternativeTimeZoneName,
-        formatted,
         group,
         mainCities,
-        offset: januaryDate.offset,
+        rawOffsetInMinutes: parseFloat(
+          timeZonesInfo[timeZoneName].rawOffset * 60,
+        ),
         mainCityName,
+      };
+
+      simplifiedTimeZones.push({
+        ...simplifiedTimeZone,
+        formatted: formatTimeZone(simplifiedTimeZone),
       });
     }
   }
@@ -227,18 +235,28 @@ async function run() {
     path.join(__dirname, "simplified-time-zones.json"),
     JSON.stringify(
       orderBy(simplifiedTimeZones, [
-        "offset",
+        "rawOffsetInMinutes",
         "alternativeName",
         "mainCityName",
-      ]).map(({ name, alternativeName, mainCities, formatted, group }) => {
-        return {
+      ]).map(
+        ({
           name,
           alternativeName,
           mainCities,
-          formatted,
           group,
-        };
-      }),
+          rawOffsetInMinutes,
+          formatted,
+        }) => {
+          return {
+            name,
+            alternativeName,
+            mainCities,
+            group,
+            rawOffsetInMinutes,
+            formatted,
+          };
+        },
+      ),
     ).replace(/},/g, "},\n"),
   );
 

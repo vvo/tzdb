@@ -8,15 +8,21 @@
   },
   "license": "MIT",
   "author": "Vincent Voyer <vincent@codeagain.com>",
+  "main": "dist/",
   "files": [
+    "dist/",
+    "lib/",
     "time-zones-names.json",
     "simplified-time-zones.json",
-    "LICENSE"
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
-    "build": "babel-node index",
+    "build": "babel lib/ -d dist/ --source-maps --ignore '**/*.test.js' --delete-dir-on-start",
     "format": "prettier --write '**/*.*' && eslint . --fix",
+    "generate": "babel-node generate.js",
     "lint": "prettier --check '**/*.*' && eslint .",
+    "prepublishOnly": "yarn build",
     "test": "yarn lint"
   },
   "babel": {
@@ -63,6 +69,7 @@
     }
   },
   "devDependencies": {
+    "@babel/cli": "7.10.4",
     "@babel/core": "7.10.4",
     "@babel/node": "7.10.4",
     "@babel/preset-env": "7.10.4",

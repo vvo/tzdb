@@ -13,7 +13,7 @@ This is useful whenever you want to build a time zone select menu in your applic
 
 ### [simplified-time-zones.json](./simplified-time-zones.json)
 
-This is most probably what you're looking for if you're trying to build a good current time zones selector in your application.
+This is most probably what you're looking for if you're trying to build a time zones selector in your application.
 
 Example data:
 
@@ -59,7 +59,8 @@ Notes:
 - Grouping: when two different time zones names are in the same country, same offset and dst rules then we merge them and select the time zone name from the biggest city
 - We provide two cities when grouping happens, ranked by population
 - We provide offset names ("Pacific Time") without dst and remove "Standard" and "Daylight"
-- This can be used to build a good enough (Google calendar like) select box of time zones, but it's your responsibility to handle dst and real offsets
+- The offsets (-08:00) are always the "raw offsets", the ones when there's no summer time or daylight saving time in place for the time zone. We decided not to include the current date offset. Because then you would have to upgrade this library in your application as soon as it would be updated with the new "current offset". But we provide a function, `formatTimeZone` to compute the same formatted structure, with the current date offset, at runtime instead of buildtime
+- This can be used to build a good enough (Google calendar like) select box of time zones, but it's your responsibility to handle dst and real offsets using [luxon](https://moment.github.io/luxon/) for example
 
 ### [time-zones-names.json](./time-zones-names.json)
 
@@ -94,13 +95,38 @@ npm add @vvo/tzdb
 Usage:
 
 ```js
-import timeZones from "@vvo/tzdb/time-zones-names.json";
-import simplifiedTimeZones from "@vvo/tzdb/simplified-time-zones.json";
+import { simplifiedTimeZones, timeZonesNames, formatTimeZone } from "@vvo/tzdb";
 ```
+
+## API
+
+### simplifiedTimeZones
+
+### timeZonesNames
+
+### formatTimeZone(simplifiedTimeZone, { useCurrentOffset = false })
+
+You can use this function when you want to get a formatted time zone but with the current date offset. This is useful if you always want to show the real, current time zone offset.
+
+Example usage:
+
+```js
+import { simplifiedTimeZones, formatTimeZone } from "@vvo/tzdb";
+
+console.log(
+  formatTimeZone(simplifiedTimeZones[10], { useCurrentOffset: true }),
+);
+// output when in DST:
+// -07:00 Pacific Time - Los Angeles, San Diego
+```
+
+This function uses luxon internally, so it would be better for your build size to also use luxon in your application whenever you need to manipulate dates.
+
+PS: If you'd like to contribute to this library, we could make it so that formatTimeZone is not luxon dependant, for example taking the code here: https://github.com/mobz/get-timezone-offset. Open an issue!
 
 ## [BETA] Algolia
 
-You can store cities information on a search engine like [Algolia](http://algolia.com/). There's a `yarn build` command you can use if you clone this repository to create your own Algolia index. The expected environment variables are:
+You can store cities information on a search engine like [Algolia](http://algolia.com/). There's a `yarn generate` command you can use if you clone this repository to create your own Algolia index. The expected environment variables are:
 
 ```
 ALGOLIA_APPLICATION_ID=... ALGOLIA_ADMIN_API_KEY=... ALGOLIA_INDEX_NAME=... yarn build
