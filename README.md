@@ -138,4 +138,3 @@ ALGOLIA_APPLICATION_ID=... ALGOLIA_ADMIN_API_KEY=... ALGOLIA_INDEX_NAME=... yarn
 Here's a demo of the index:
 
 ![Demo](./demo.gif)
-
