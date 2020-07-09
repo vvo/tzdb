@@ -12,4 +12,4 @@
 /coverage/
 /dist/
 time-zones-names.json
-simplified-time-zones.json
+raw-time-zones.json

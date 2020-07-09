@@ -4,88 +4,11 @@ This is a list and npm package of:
 
 - "simplified" [IANA time zones](https://www.iana.org/time-zones) with their alternative names like `Pacific Time` instead of `America/Los_Angeles`, along with major cities for each time zone.
 - all existing raw IANA time zones names
+- "raw" offsets along with current time offsets
 
 The data and npm packages are **automatically updated** whenever there are changes to https://www.geonames.org/ which is generated from IANA databases.
 
 This is useful whenever you want to build a time zone select menu in your application.
-
-## Available data
-
-### [simplified-time-zones.json](./simplified-time-zones.json)
-
-This is most probably what you're looking for if you're trying to build a time zones selector in your application.
-
-Example data:
-
-```js
-[
-  // ...
-  {
-    name: "America/Anchorage",
-    alternativeName: "Alaska Time",
-    countryName: "United States",
-    mainCities: ["Anchorage", "Juneau"],
-    formatted: "-09:00 Alaska Time - Anchorage, Juneau",
-    group: [
-      "America/Anchorage",
-      "America/Juneau",
-      "America/Metlakatla",
-      "America/Nome",
-      "America/Sitka",
-      "America/Yakutat",
-    ],
-  },
-  {
-    name: "Pacific/Gambier",
-    alternativeName: "Gambier Time",
-    countryName: "French Polynesia",
-    mainCities: ["Gambier"],
-    formatted: "-09:00 Gambier Time - Gambier",
-    group: ["Pacific/Gambier"],
-  },
-  {
-    name: "America/Los_Angeles",
-    alternativeName: "Pacific Time",
-    countryName: "United States",
-    mainCities: ["Los Angeles", "San Diego"],
-    formatted: "-08:00 Pacific Time - Los Angeles, San Diego",
-    group: ["America/Los_Angeles"],
-  },
-  // ...
-];
-```
-
-As you can see, we provide the time zone name and a pre-formatted version using more common offset names.
-
-Notes:
-
-- Grouping: when two different time zones names are in the same country, same offset and dst rules then we merge them and select the time zone name from the biggest city
-- We provide two cities when grouping happens, ranked by population
-- We provide offset names ("Pacific Time") without dst and remove "Standard" and "Daylight"
-- The offsets (-08:00) are always the "raw offsets", the ones when there's no summer time or daylight saving time in place for the time zone. We decided not to include the current date offset. Because then you would have to upgrade this library in your application as soon as it would be updated with the new "current offset". But we provide a function, `formatTimeZone` to compute the same formatted structure, with the current date offset, at runtime instead of buildtime
-- This can be used to build a good enough (Google calendar like) select box of time zones, but it's your responsibility to handle dst and real offsets using [luxon](https://moment.github.io/luxon/) for example
-
-### [time-zones-names.json](./time-zones-names.json)
-
-This is the raw list of all IANA time zones ranked by alphabetical order.
-
-Example data:
-
-```js
-[
-  // ...
-  "America/La_Paz",
-  "America/Lima",
-  "America/Los_Angeles",
-  "America/Lower_Princes",
-  "America/Maceio",
-  "America/Managua",
-  "America/Manaus",
-  "America/Marigot",
-  "America/Martinique",
-  // ...
-];
-```
 
 ## NPM package
 
@@ -98,43 +21,119 @@ npm add @vvo/tzdb
 Usage:
 
 ```js
-import { simplifiedTimeZones, timeZonesNames, formatTimeZone } from "@vvo/tzdb";
+import { getTimeZones, rawTimeZones, timeZonesNames } from "@vvo/tzdb";
 ```
 
 ## API
 
-### simplifiedTimeZones
+### getTimeZones()
+
+```js
+const timeZones = getTimeZones();
+```
+
+This method returns an array of time zones objects:
+
+```js
+[
+  // ...
+  {
+    name: "America/Los_Angeles",
+    alternativeName: "Pacific Time",
+    group: ["America/Los_Angeles"],
+    countryName: "United States",
+    mainCities: ["Los Angeles", "San Diego"],
+    rawOffsetInMinutes: -480, // "raw" time zone offset, when there's no DST in place
+    rawFormat: "-08:00 Pacific Time - Los Angeles, San Diego",
+    currentTimeOffsetInMinutes: -420, // "current" time zone offset, this is why getTimeZones() is a method and not just an object: it can only work at runtime
+    currentTimeFormat: "-07:00 Pacific Time - Los Angeles, San Diego",
+  },
+  // ...
+];
+```
+
+When relevant, time zones are grouped. The rules for grouping are:
+
+- if the time zones are in the same country
+- if the DST or summer time offsets
+- if the non DST, non summer time offsets are the same
+- then we group the time zones
+- the "main" time zone name (`name` attribute), is always the one from the most populated city
+
+Here's a grouping example:
+
+```js
+{
+  name: 'America/Dawson_Creek',
+  alternativeName: 'Mountain Time',
+  group: [ 'America/Creston', 'America/Dawson_Creek', 'America/Fort_Nelson' ],
+  countryName: 'Canada',
+  mainCities: [ 'Fort St. John', 'Creston' ],
+  rawOffsetInMinutes: -420,
+  rawFormat: '-07:00 Mountain Time - Fort St. John, Creston',
+  currentTimeOffsetInMinutes: -420,
+  currentTimeFormat: '-07:00 Mountain Time - Fort St. John, Creston'
+}
+```
+
+### rawTimeZones
+
+This is an array of time zone objects without the current time information:
+
+```js
+[
+  // ...
+  {
+    name: "America/Los_Angeles",
+    alternativeName: "Pacific Time",
+    group: ["America/Los_Angeles"],
+    countryName: "United States",
+    mainCities: ["Los Angeles", "San Diego"],
+    rawOffsetInMinutes: -480,
+    rawFormat: "-08:00 Pacific Time - Los Angeles, San Diego",
+  },
+  // ...
+];
+```
 
 ### timeZonesNames
 
-### formatTimeZone(simplifiedTimeZone, { useCurrentOffset = false })
-
-You can use this function when you want to get a formatted time zone but with the current date offset. This is useful if you always want to show the real, current time zone offset.
-
-Example usage:
+This is an array of time zone names:
 
 ```js
-import { simplifiedTimeZones, formatTimeZone } from "@vvo/tzdb";
-
-console.log(
-  formatTimeZone(simplifiedTimeZones[10], { useCurrentOffset: true }),
-);
-// output when in DST:
-// -07:00 Pacific Time - Los Angeles, San Diego
+[
+  // ...
+  "America/Juneau",
+  "America/Kentucky/Louisville",
+  "America/Kentucky/Monticello",
+  "America/Kralendijk",
+  "America/La_Paz",
+  "America/Lima",
+  "America/Los_Angeles",
+  "America/Lower_Princes",
+  "America/Maceio",
+  "America/Managua",
+  "America/Manaus",
+  "America/Marigot",
+  "America/Martinique",
+  "America/Matamoros",
+  // ...
+];
 ```
 
-This function uses luxon internally, so it would be better for your build size to also use luxon in your application whenever you need to manipulate dates.
+## Notes
 
-PS: If you'd like to contribute to this library, we could make it so that formatTimeZone is not luxon dependant, for example taking the code here: https://github.com/mobz/get-timezone-offset. Open an issue!
+- We provide two cities when grouping happens, ranked by population
+- We provide alternative names ("Pacific Time" for "America/Los_Angeles") and remove "Standard", "Daylight" or "Summer" from them
+- If you're using this to build a time zone selector and saving to a database then:
+  - make sure to save the `name` attribute (`America/Los_Angeles`) in your database
+  - when displaying the select with a default value from your database, either select the time zone name that matches, or if the time zone name is part of the group. Example:
 
-## [BETA] Algolia
-
-You can store cities information on a search engine like [Algolia](http://algolia.com/). There's a `yarn generate` command you can use if you clone this repository to create your own Algolia index. The expected environment variables are:
-
+```js
+const value = timeZones.find((timeZone) => {
+  return (
+    dbData.timeZone === timeZone.name ||
+    timeZone.group.includes(dbData.timeZone)
+  );
+});
 ```
-ALGOLIA_APPLICATION_ID=... ALGOLIA_ADMIN_API_KEY=... ALGOLIA_INDEX_NAME=... yarn build
-```
-
-Here's a demo of the index:
-
-![Demo](./demo.gif)

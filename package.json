@@ -8,12 +8,13 @@
   },
   "license": "MIT",
   "author": "Vincent Voyer <vincent@codeagain.com>",
+  "sideEffects": false,
   "main": "dist/",
   "files": [
     "dist/",
     "lib/",
     "time-zones-names.json",
-    "simplified-time-zones.json",
+    "raw-time-zones.json",
     "LICENSE",
     "README.md"
   ],
@@ -69,7 +70,8 @@
     }
   },
   "dependencies": {
-    "luxon": "1.24.1"
+    "luxon": "1.24.1",
+    "sort-on": "^4.1.0"
   },
   "devDependencies": {
     "@babel/cli": "7.10.4",

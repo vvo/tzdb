@@ -4,35 +4,35 @@ import path from "path";
 import parse from "csv-parse";
 import unzipper from "unzipper";
 import got from "got";
-import algoliasearch from "algoliasearch";
+// import algoliasearch from "algoliasearch";
 import dotenv from "dotenv";
 import { DateTime } from "luxon";
-import { chunk, orderBy, uniq } from "lodash";
-import pEachSeries from "p-each-series";
+import { /*chunk,*/ orderBy, uniq } from "lodash";
+// import pEachSeries from "p-each-series";
 
 import formatTimeZone from "./lib/formatTimeZone.js";
 
 dotenv.config();
 
 async function run() {
-  const algoliaApplicationId = process.env.ALGOLIA_APPLICATION_ID;
-  const algoliaAdminApiKey = process.env.ALGOLIA_ADMIN_API_KEY;
-  const algoliaIndexName = process.env.ALGOLIA_INDEX_NAME;
+  // const algoliaApplicationId = process.env.ALGOLIA_APPLICATION_ID;
+  // const algoliaAdminApiKey = process.env.ALGOLIA_ADMIN_API_KEY;
+  // const algoliaIndexName = process.env.ALGOLIA_INDEX_NAME;
 
-  const algoliaClient = algoliasearch(algoliaApplicationId, algoliaAdminApiKey);
-  const algoliaIndex = algoliaClient.initIndex(algoliaIndexName);
+  // const algoliaClient = algoliasearch(algoliaApplicationId, algoliaAdminApiKey);
+  // const algoliaIndex = algoliaClient.initIndex(algoliaIndexName);
 
-  await algoliaIndex
-    .setSettings({
-      searchableAttributes: ["name", "countryName", "timezoneName"],
-      attributesToRetrieve: ["name", "countryName", "timezoneName"],
-      customRanking: ["desc(population)"],
-    })
-    .wait();
-  const { userData } = await algoliaIndex.getSettings();
+  // await algoliaIndex
+  //   .setSettings({
+  //     searchableAttributes: ["name", "countryName", "timezoneName"],
+  //     attributesToRetrieve: ["name", "countryName", "timezoneName"],
+  //     customRanking: ["desc(population)"],
+  //   })
+  //   .wait();
+  // const { userData } = await algoliaIndex.getSettings();
 
-  const lastIndexUpdate =
-    process.env.LAST_INDEX_UPDATE || userData?.lastIndexUpdate || "1970-01-01";
+  // const lastIndexUpdate =
+  //   process.env.LAST_INDEX_UPDATE || userData?.lastIndexUpdate || "1970-01-01";
 
   const countriesParser = got
     .stream("https://download.geonames.org/export/dump/countryInfo.txt")
@@ -52,7 +52,7 @@ async function run() {
       delimiter: "\t",
     }),
   );
-  const updatedCities = [];
+  // const updatedCities = [];
   const timeZoneCities = {};
 
   for await (const cityFields of citiesParser) {
@@ -65,7 +65,7 @@ async function run() {
       process.exit(1);
     }
 
-    const modificationDate = cityFields[18];
+    // const modificationDate = cityFields[18];
     const name = cityFields[1];
     const population = parseInt(cityFields[14], 10);
     const countryCode = cityFields[8];
@@ -81,39 +81,40 @@ async function run() {
       timeZoneName,
     });
 
-    const tz = DateTime.fromObject({
-      zone: timeZoneName,
-      day: 1,
-      month: 1,
-      locale: "en-US",
-    });
+    // const tz = DateTime.fromObject({
+    //   zone: timeZoneName,
+    //   day: 1,
+    //   month: 1,
+    //   locale: "en-US",
+    // });
 
-    const alternativeTimeZoneName = tz
-      .toFormat(`ZZZZZ`)
-      .replace(/Standard Time/g, "Time")
-      .replace(/Daylight Time/g, "Time");
+    // const alternativeTimeZoneName = tz
+    //   .toFormat(`ZZZZZ`)
+    //   .replace(/Standard Time/g, "Time")
+    //   .replace(/Daylight Time/g, "Time")
+    //   .replace(/Summer Time/g, "Time");
 
-    const city = {
-      geonameId: cityFields[0],
-      name,
-      countryName: countries[cityFields[8]],
-      timeZoneName,
-      alternativeTimeZoneName,
-      population,
-      modificationDate,
-    };
+    // const city = {
+    //   geonameId: cityFields[0],
+    //   name,
+    //   countryName: countries[cityFields[8]],
+    //   timeZoneName,
+    //   alternativeTimeZoneName,
+    //   population,
+    //   modificationDate,
+    // };
 
-    if (modificationDate > lastIndexUpdate) {
-      updatedCities.push({
-        objectID: city.geonameId,
-        ...city,
-      });
-    }
+    // if (modificationDate > lastIndexUpdate) {
+    //   updatedCities.push({
+    //     objectID: city.geonameId,
+    //     ...city,
+    //   });
+    // }
   }
 
   // Time zones
 
-  const rawTimeZones = [];
+  const timeZonesNames = [];
   const timeZonesInfo = {};
 
   const timeZonesParser = got
@@ -138,7 +139,7 @@ async function run() {
       continue;
     }
 
-    rawTimeZones.push(timeZoneName);
+    timeZonesNames.push(timeZoneName);
 
     const countryCode = timeZoneFields[0];
 
@@ -188,7 +189,7 @@ async function run() {
     "Pacific/Bougainville": "Bougainville Time",
   };
 
-  const simplifiedTimeZones = [];
+  const rawTimeZones = [];
 
   for (let [countryCode, countryTimeZones] of Object.entries(countryStats)) {
     for (let [, timeZoneWithCities] of Object.entries(countryTimeZones)) {
@@ -205,7 +206,7 @@ async function run() {
         }),
       );
 
-      const { timeZoneName, name: mainCityName } = mainCitiesObject[0];
+      const { timeZoneName } = mainCitiesObject[0];
 
       const januaryDate = DateTime.fromObject({
         locale: "en-US",
@@ -217,7 +218,8 @@ async function run() {
       let alternativeTimeZoneName = januaryDate
         .toFormat(`ZZZZZ`)
         .replace(/Standard Time/g, "Time")
-        .replace(/Daylight Time/g, "Time");
+        .replace(/Daylight Time/g, "Time")
+        .replace(/Summer Time/g, "Time");
 
       // there are some cases where Node.js tz data won't be giving actual alternative names
       // for time zones and instead will send GMT +03:00, so we fix that
@@ -226,78 +228,58 @@ async function run() {
           alternativeNameCorrections[timeZoneName] || timeZoneName;
       }
 
-      const simplifiedTimeZone = {
+      const rawTimeZone = {
         name: timeZoneName,
         alternativeName: alternativeTimeZoneName,
         group,
         countryName: countries[countryCode],
+        countryCode,
         mainCities,
         rawOffsetInMinutes: parseFloat(
           timeZonesInfo[timeZoneName].rawOffset * 60,
         ),
-        mainCityName,
       };
 
-      simplifiedTimeZones.push({
-        ...simplifiedTimeZone,
-        formatted: formatTimeZone(simplifiedTimeZone),
+      rawTimeZones.push({
+        ...rawTimeZone,
+        rawFormat: formatTimeZone(rawTimeZone),
       });
     }
   }
 
   fs.writeFileSync(
     path.join(__dirname, "time-zones-names.json"),
-    JSON.stringify(rawTimeZones.sort()).replace(/",/g, '",\n'),
+    JSON.stringify(timeZonesNames.sort()).replace(/",/g, '",\n'),
   );
 
   fs.writeFileSync(
-    path.join(__dirname, "simplified-time-zones.json"),
+    path.join(__dirname, "raw-time-zones.json"),
     JSON.stringify(
-      orderBy(simplifiedTimeZones, [
+      orderBy(rawTimeZones, [
         "rawOffsetInMinutes",
         "alternativeName",
-        "mainCityName",
-      ]).map(
-        ({
-          name,
-          alternativeName,
-          countryName,
-          mainCities,
-          group,
-          rawOffsetInMinutes,
-          formatted,
-        }) => {
-          return {
-            name,
-            alternativeName,
-            countryName,
-            mainCities,
-            group,
-            rawOffsetInMinutes,
-            formatted,
-          };
-        },
-      ),
+        "mainCities[0]",
+      ]),
     ).replace(/},/g, "},\n"),
   );
 
   // Algolia update
 
-  await pEachSeries(chunk(updatedCities, 500), async function saveToAlgolia(
-    citiesChunk,
-  ) {
-    await algoliaIndex.saveObjects(citiesChunk);
-  });
+  // await pEachSeries(chunk(updatedCities, 500), async function saveToAlgolia(
+  //   citiesChunk,
+  // ) {
+  //   await algoliaIndex.saveObjects(citiesChunk);
+  // });
 
-  await algoliaIndex
-    .setSettings({
-      userData: { lastIndexUpdate: DateTime.utc().toISODate() },
-    })
-    .wait();
+  // await algoliaIndex
+  //   .setSettings({
+  //     userData: { lastIndexUpdate: DateTime.utc().toISODate() },
+  //   })
+  //   .wait();
 
-  console.log(
-    `Done, ${updatedCities.length} cities were updated since last run`,
-  );
+  // console.log(
+  //   `Done, ${updatedCities.length} cities were updated since last run`,
+  // );
 }
 
 run().catch((error) => {
