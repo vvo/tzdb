@@ -55,7 +55,7 @@ This method returns an array of time zones objects:
 When relevant, time zones are grouped. The rules for grouping are:
 
 - if the time zones are in the same country
-- if the DST or summer time offsets
+- if the DST or summer time offsets are the same
 - if the non DST, non summer time offsets are the same
 - then we group the time zones
 - the "main" time zone name (`name` attribute), is always the one from the most populated city
