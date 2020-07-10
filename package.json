@@ -1,7 +1,16 @@
 {
   "name": "@vvo/tzdb",
   "version": "0.0.0-development",
-  "description": "Simplified, grouped and always up to date list of time zones, with major cities",
+  "description": "Always up to date list of time zones, with grouping and major cities",
+  "keywords": [
+    "timezones",
+    "time zones",
+    "time zone",
+    "timezones list",
+    "time zones list",
+    "IANA time zones",
+    "geonames"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/vvo/tzdb.git"
