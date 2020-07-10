@@ -95,7 +95,7 @@
     "eslint": "7.4.0",
     "eslint-plugin-import": "2.22.0",
     "got": "11.5.0",
-    "lodash": "4.17.15",
+    "lodash": "4.17.19",
     "p-each-series": "2.1.0",
     "prettier": "2.0.5",
     "prettier-plugin-packagejson": "2.2.5",
