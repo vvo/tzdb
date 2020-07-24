@@ -20,16 +20,19 @@
   "sideEffects": false,
   "main": "dist/",
   "module": "lib/",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/",
     "lib/",
     "time-zones-names.json",
     "raw-time-zones.json",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "index.d.ts"
   ],
   "scripts": {
     "build": "babel lib/ -d dist/ --source-maps --ignore '**/*.test.js' --delete-dir-on-start",
+    "postbuild": "cp index.d.ts dist/",
     "format": "prettier --write '**/*.*' && eslint . --fix",
     "generate": "babel-node generate.js",
     "lint": "prettier --check '**/*.*' && eslint .",
