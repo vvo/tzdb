@@ -7567,10 +7567,10 @@ safe-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-semantic-release-cli@5.3.1:
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/semantic-release-cli/-/semantic-release-cli-5.3.1.tgz#65bb7f28591031ae4152fa0b0d4b667b20c0ba8c"
-  integrity sha512-ez+/C8optoqIi7U8s6SVVVttQ1AunMt8VSY2CW9Zm9jddd9rQdiLwHMRO2APDsR4QV8I86tNo56+XssCSfWmpQ==
+semantic-release-cli@5.4.0:
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/semantic-release-cli/-/semantic-release-cli-5.4.0.tgz#35df971e22cd08da099ebe43536a2479a71a8162"
+  integrity sha512-bhl5LsfZax3VdX5yOpebufiZiVzhxEJlh4Cx8p7t9lfoGJnWvIi1rgWRKghZ+nR8OKFARuc+5oYeJOGkhyZxYg==
   dependencies:
     babel-polyfill "^6.26.0"
     babel-preset-env "^1.6.1"
