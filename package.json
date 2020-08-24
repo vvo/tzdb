@@ -100,7 +100,7 @@
     "got": "11.5.2",
     "lodash": "4.17.20",
     "p-each-series": "2.1.0",
-    "prettier": "2.0.5",
+    "prettier": "2.1.0",
     "prettier-plugin-packagejson": "2.2.5",
     "semantic-release": "17.1.1",
     "semantic-release-cli": "5.4.0",
