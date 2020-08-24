@@ -83,7 +83,7 @@
     }
   },
   "dependencies": {
-    "luxon": "1.24.1",
+    "luxon": "1.25.0",
     "sort-on": "^4.1.0"
   },
   "devDependencies": {
