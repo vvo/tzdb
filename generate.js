@@ -34,13 +34,25 @@ async function run() {
   // const lastIndexUpdate =
   //   process.env.LAST_INDEX_UPDATE || userData?.lastIndexUpdate || "1970-01-01";
 
+  const continents = {
+    "AF": "Africa",
+    "AS": "Asia",
+    "EU": "Europe",
+    "NA": "North America",
+    "OC": "Oceania",
+    "SA": "South America",
+    "AN": "Antarctica",
+  }
+
   const countriesParser = got
     .stream("https://download.geonames.org/export/dump/countryInfo.txt")
     .pipe(parse({ delimiter: "\t" }));
   const countries = {};
+  const countriesToContinents = {};
 
   for await (const countryFields of countriesParser) {
     countries[countryFields[0]] = countryFields[4];
+    countriesToContinents[countryFields[0]] = countryFields[8];
   }
 
   const citiesCsv = got
@@ -192,6 +204,8 @@ async function run() {
   const rawTimeZones = [];
 
   for (let [countryCode, countryTimeZones] of Object.entries(countryStats)) {
+    const continentCode = countriesToContinents[countryCode];
+
     for (let [, timeZoneWithCities] of Object.entries(countryTimeZones)) {
       const orderedCities = orderBy(timeZoneWithCities, "population", "desc");
 
@@ -232,6 +246,8 @@ async function run() {
         name: timeZoneName,
         alternativeName: alternativeTimeZoneName,
         group,
+        continentCode,
+        continentName: continents[continentCode],
         countryName: countries[countryCode],
         countryCode,
         mainCities,
