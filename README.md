@@ -42,6 +42,8 @@ This method returns an array of time zones objects:
     alternativeName: "Pacific Time",
     group: ["America/Los_Angeles"],
     countryName: "United States",
+    continentCode: "NA",
+    continentName: "North America",
     mainCities: ["Los Angeles", "San Diego"],
     rawOffsetInMinutes: -480, // "raw" time zone offset, when there's no DST in place
     rawFormat: "-08:00 Pacific Time - Los Angeles, San Diego",
@@ -68,6 +70,8 @@ Here's a grouping example:
   alternativeName: 'Mountain Time',
   group: [ 'America/Creston', 'America/Dawson_Creek', 'America/Fort_Nelson' ],
   countryName: 'Canada',
+  continentCode: "NA",
+  continentName: "North America",
   mainCities: [ 'Fort St. John', 'Creston' ],
   rawOffsetInMinutes: -420,
   rawFormat: '-07:00 Mountain Time - Fort St. John, Creston',
