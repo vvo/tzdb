@@ -35,14 +35,14 @@ async function run() {
   //   process.env.LAST_INDEX_UPDATE || userData?.lastIndexUpdate || "1970-01-01";
 
   const continents = {
-    "AF": "Africa",
-    "AS": "Asia",
-    "EU": "Europe",
-    "NA": "North America",
-    "OC": "Oceania",
-    "SA": "South America",
-    "AN": "Antarctica",
-  }
+    AF: "Africa",
+    AS: "Asia",
+    EU: "Europe",
+    NA: "North America",
+    OC: "Oceania",
+    SA: "South America",
+    AN: "Antarctica",
+  };
 
   const countriesParser = got
     .stream("https://download.geonames.org/export/dump/countryInfo.txt")

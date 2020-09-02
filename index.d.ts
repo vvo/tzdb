@@ -5,6 +5,8 @@ interface RawTimeZone {
   alternativeName: string;
   group: string[];
   countryName: string;
+  continentCode: string;
+  continentName: string;
   countryCode: string;
   mainCities: string[];
   rawOffsetInMinutes: number;

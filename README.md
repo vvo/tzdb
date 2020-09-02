@@ -58,7 +58,7 @@ When relevant, time zones are grouped. The rules for grouping are:
 
 - if the time zones are in the same country
 - if the DST or summer time offsets are the same
-- if the non DST, non summer time offsets are the same
+- if the non-DST, non-summer time offsets are the same
 - then we group the time zones
 - the "main" time zone name (`name` attribute), is always the one from the most populated city
 
@@ -66,17 +66,17 @@ Here's a grouping example:
 
 ```js
 {
-  name: 'America/Dawson_Creek',
-  alternativeName: 'Mountain Time',
-  group: [ 'America/Creston', 'America/Dawson_Creek', 'America/Fort_Nelson' ],
-  countryName: 'Canada',
+  name: "America/Dawson_Creek",
+  alternativeName: "Mountain Time",
+  group: [ "America/Creston", "America/Dawson_Creek", "America/Fort_Nelson" ],
+  countryName: "Canada",
   continentCode: "NA",
   continentName: "North America",
-  mainCities: [ 'Fort St. John', 'Creston' ],
+  mainCities: [ "Fort St. John", "Creston" ],
   rawOffsetInMinutes: -420,
-  rawFormat: '-07:00 Mountain Time - Fort St. John, Creston',
+  rawFormat: "-07:00 Mountain Time - Fort St. John, Creston",
   currentTimeOffsetInMinutes: -420,
-  currentTimeFormat: '-07:00 Mountain Time - Fort St. John, Creston'
+  currentTimeFormat: "-07:00 Mountain Time - Fort St. John, Creston"
 }
 ```
 
@@ -92,6 +92,8 @@ This is an array of time zone objects without the current time information:
     alternativeName: "Pacific Time",
     group: ["America/Los_Angeles"],
     countryName: "United States",
+    continentCode: "NA",
+    continentName: "North America",
     mainCities: ["Los Angeles", "San Diego"],
     rawOffsetInMinutes: -480,
     rawFormat: "-08:00 Pacific Time - Los Angeles, San Diego",
