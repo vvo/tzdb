@@ -97,7 +97,7 @@
     "dotenv": "8.2.0",
     "eslint": "7.8.1",
     "eslint-plugin-import": "2.22.0",
-    "got": "11.6.0",
+    "got": "11.6.1",
     "lodash": "4.17.20",
     "p-each-series": "2.1.0",
     "prettier": "2.1.1",
