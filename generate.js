@@ -4,36 +4,15 @@ import path from "path";
 import parse from "csv-parse";
 import unzipper from "unzipper";
 import got from "got";
-// import algoliasearch from "algoliasearch";
 import dotenv from "dotenv";
 import { DateTime } from "luxon";
-import { /*chunk,*/ orderBy, uniq } from "lodash";
-// import pEachSeries from "p-each-series";
+import { orderBy, uniq } from "lodash";
 
 import formatTimeZone from "./lib/formatTimeZone.js";
 
 dotenv.config();
 
 async function run() {
-  // const algoliaApplicationId = process.env.ALGOLIA_APPLICATION_ID;
-  // const algoliaAdminApiKey = process.env.ALGOLIA_ADMIN_API_KEY;
-  // const algoliaIndexName = process.env.ALGOLIA_INDEX_NAME;
-
-  // const algoliaClient = algoliasearch(algoliaApplicationId, algoliaAdminApiKey);
-  // const algoliaIndex = algoliaClient.initIndex(algoliaIndexName);
-
-  // await algoliaIndex
-  //   .setSettings({
-  //     searchableAttributes: ["name", "countryName", "timezoneName"],
-  //     attributesToRetrieve: ["name", "countryName", "timezoneName"],
-  //     customRanking: ["desc(population)"],
-  //   })
-  //   .wait();
-  // const { userData } = await algoliaIndex.getSettings();
-
-  // const lastIndexUpdate =
-  //   process.env.LAST_INDEX_UPDATE || userData?.lastIndexUpdate || "1970-01-01";
-
   const continents = {
     AF: "Africa",
     AS: "Asia",
@@ -92,36 +71,6 @@ async function run() {
       population,
       timeZoneName,
     });
-
-    // const tz = DateTime.fromObject({
-    //   zone: timeZoneName,
-    //   day: 1,
-    //   month: 1,
-    //   locale: "en-US",
-    // });
-
-    // const alternativeTimeZoneName = tz
-    //   .toFormat(`ZZZZZ`)
-    //   .replace(/Standard Time/g, "Time")
-    //   .replace(/Daylight Time/g, "Time")
-    //   .replace(/Summer Time/g, "Time");
-
-    // const city = {
-    //   geonameId: cityFields[0],
-    //   name,
-    //   countryName: countries[cityFields[8]],
-    //   timeZoneName,
-    //   alternativeTimeZoneName,
-    //   population,
-    //   modificationDate,
-    // };
-
-    // if (modificationDate > lastIndexUpdate) {
-    //   updatedCities.push({
-    //     objectID: city.geonameId,
-    //     ...city,
-    //   });
-    // }
   }
 
   // Time zones
@@ -254,6 +203,7 @@ async function run() {
         rawOffsetInMinutes: parseFloat(
           timeZonesInfo[timeZoneName].rawOffset * 60,
         ),
+        abbreviation: januaryDate.toFormat(`ZZZZ`),
       };
 
       rawTimeZones.push({
@@ -278,24 +228,6 @@ async function run() {
       ]),
     ).replace(/},/g, "},\n"),
   );
-
-  // Algolia update
-
-  // await pEachSeries(chunk(updatedCities, 500), async function saveToAlgolia(
-  //   citiesChunk,
-  // ) {
-  //   await algoliaIndex.saveObjects(citiesChunk);
-  // });
-
-  // await algoliaIndex
-  //   .setSettings({
-  //     userData: { lastIndexUpdate: DateTime.utc().toISODate() },
-  //   })
-  //   .wait();
-
-  // console.log(
-  //   `Done, ${updatedCities.length} cities were updated since last run`,
-  // );
 }
 
 run().catch((error) => {
