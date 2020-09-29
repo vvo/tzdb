@@ -9,6 +9,7 @@ import { DateTime } from "luxon";
 import { orderBy, uniq } from "lodash";
 
 import formatTimeZone from "./lib/formatTimeZone.js";
+import abbreviations from "./abbreviations.json";
 
 dotenv.config();
 
@@ -203,7 +204,10 @@ async function run() {
         rawOffsetInMinutes: parseFloat(
           timeZonesInfo[timeZoneName].rawOffset * 60,
         ),
-        abbreviation: januaryDate.toFormat(`ZZZZ`),
+        abbreviation: getAbbreviation({
+          date: januaryDate,
+          timeZoneName: alternativeTimeZoneName,
+        }),
       };
 
       rawTimeZones.push({
@@ -234,3 +238,20 @@ run().catch((error) => {
   console.error(error);
   process.exit(1);
 });
+
+function getAbbreviation({ date, timeZoneName }) {
+  const standardAbbreviation =
+    abbreviations[timeZoneName.replace("Time", "Standard Time")];
+
+  if (standardAbbreviation) {
+    return standardAbbreviation;
+  }
+
+  const exactAbbreviation = abbreviations[timeZoneName];
+
+  if (exactAbbreviation) {
+    return exactAbbreviation;
+  }
+
+  return date.toFormat(`ZZZZ`);
+}
