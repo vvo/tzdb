@@ -40,6 +40,7 @@ This method returns an array of time zones objects:
   {
     name: "America/Los_Angeles",
     alternativeName: "Pacific Time",
+    abbreviation: "PST",
     group: ["America/Los_Angeles"],
     countryName: "United States",
     continentCode: "NA",
@@ -68,6 +69,7 @@ Here's a grouping example:
 {
   name: "America/Dawson_Creek",
   alternativeName: "Mountain Time",
+  abbreviation: "MST",
   group: [ "America/Creston", "America/Dawson_Creek", "America/Fort_Nelson" ],
   countryName: "Canada",
   continentCode: "NA",
@@ -90,6 +92,7 @@ This is an array of time zone objects without the current time information:
   {
     name: "America/Los_Angeles",
     alternativeName: "Pacific Time",
+    abbreviation: "PST",
     group: ["America/Los_Angeles"],
     countryName: "United States",
     continentCode: "NA",
