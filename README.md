@@ -40,15 +40,16 @@ This method returns an array of time zones objects:
   {
     name: "America/Los_Angeles",
     alternativeName: "Pacific Time",
-    abbreviation: "PST",
     group: ["America/Los_Angeles"],
-    countryName: "United States",
     continentCode: "NA",
     continentName: "North America",
-    mainCities: ["Los Angeles", "San Diego"],
-    rawOffsetInMinutes: -480, // "raw" time zone offset, when there's no DST in place
-    rawFormat: "-08:00 Pacific Time - Los Angeles, San Diego",
-    currentTimeOffsetInMinutes: -420, // "current" time zone offset, this is why getTimeZones() is a method and not just an object: it can only work at runtime
+    countryName: "United States",
+    countryCode: "US",
+    mainCities: ["Los Angeles", "San Diego", "San Jose", "San Francisco"],
+    rawOffsetInMinutes: -480,
+    abbreviation: "PST",
+    rawFormat: "-08:00 Pacific Time - Los Angeles, San Diego, San Jose, San Francisco",
+    currentTimeOffsetInMinutes: -420, // "current" time zone offset, this is why getTimeZones() is a method and not just an object: it works at runtime
     currentTimeFormat: "-07:00 Pacific Time - Los Angeles, San Diego",
   },
   // ...
@@ -69,14 +70,15 @@ Here's a grouping example:
 {
   name: "America/Dawson_Creek",
   alternativeName: "Mountain Time",
-  abbreviation: "MST",
-  group: [ "America/Creston", "America/Dawson_Creek", "America/Fort_Nelson" ],
-  countryName: "Canada",
+  group: ["America/Creston", "America/Dawson_Creek", "America/Fort_Nelson"],
   continentCode: "NA",
   continentName: "North America",
-  mainCities: [ "Fort St. John", "Creston" ],
+  countryName: "Canada",
+  countryCode: "CA",
+  mainCities: ["Fort St. John", "Creston", "Fort Nelson"],
   rawOffsetInMinutes: -420,
-  rawFormat: "-07:00 Mountain Time - Fort St. John, Creston",
+  abbreviation: "MST",
+  rawFormat: "-07:00 Mountain Time - Fort St. John, Creston, Fort Nelson",
   currentTimeOffsetInMinutes: -420,
   currentTimeFormat: "-07:00 Mountain Time - Fort St. John, Creston"
 }
@@ -92,14 +94,15 @@ This is an array of time zone objects without the current time information:
   {
     name: "America/Los_Angeles",
     alternativeName: "Pacific Time",
-    abbreviation: "PST",
     group: ["America/Los_Angeles"],
-    countryName: "United States",
     continentCode: "NA",
     continentName: "North America",
-    mainCities: ["Los Angeles", "San Diego"],
+    countryName: "United States",
+    countryCode: "US",
+    mainCities: ["Los Angeles", "San Diego", "San Jose", "San Francisco"],
     rawOffsetInMinutes: -480,
-    rawFormat: "-08:00 Pacific Time - Los Angeles, San Diego",
+    abbreviation: "PST",
+    rawFormat: "-08:00 Pacific Time - Los Angeles, San Diego, San Jose, San Francisco",
   },
   // ...
 ];
@@ -140,9 +143,6 @@ This is an array of time zone names:
 
 ```js
 const value = timeZones.find((timeZone) => {
-  return (
-    dbData.timeZone === timeZone.name ||
-    timeZone.group.includes(dbData.timeZone)
-  );
+  return dbData.timeZone === timeZone.name || timeZone.group.includes(dbData.timeZone);
 });
 ```
