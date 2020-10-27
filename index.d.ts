@@ -4,12 +4,13 @@ interface RawTimeZone {
   name: TimeZoneName;
   alternativeName: string;
   group: string[];
-  countryName: string;
   continentCode: string;
   continentName: string;
+  countryName: string;
   countryCode: string;
   mainCities: string[];
   rawOffsetInMinutes: number;
+  abbreviation: string;
   rawFormat: string;
 }
 
@@ -18,6 +19,6 @@ interface TimeZone extends RawTimeZone {
   currentTimeFormat: string;
 }
 
-export type rawTimeZones = RawTimeZone[];
-export type timeZonesNames = TimeZoneName[];
+export const rawTimeZones: RawTimeZone[];
+export const timeZonesNames: TimeZoneName[];
 export function getTimeZones(): TimeZone[];
