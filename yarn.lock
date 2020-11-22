@@ -7003,12 +7003,12 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
-prettier-plugin-packagejson@2.2.7:
-  version "2.2.7"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-packagejson/-/prettier-plugin-packagejson-2.2.7.tgz#e5e12bbeca937d055f39dbeb768ede89ed3c54c8"
-  integrity sha512-xpZyn/P8SGIUM2q52WuC9+CsIJ8wpObF0mMj03KRBna/XCgsUF7E/OvmtFLNc1eF9ql2lBT6aIXkWm5E4KCaBQ==
+prettier-plugin-packagejson@2.2.8:
+  version "2.2.8"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-packagejson/-/prettier-plugin-packagejson-2.2.8.tgz#aa20997c8569415bc1f0e56f0c73265a927cd3da"
+  integrity sha512-hc9sg5wgMyefVglP1Sabv3M8EFMH7IPN3WHB5gZRebsbxxHGz0ApW3siMwj7oKqqQPf+qDHAec6alFixuZtGXg==
   dependencies:
-    sort-package-json "1.46.1"
+    sort-package-json "1.48.0"
 
 prettier@2.1.2:
   version "2.1.2"
@@ -7977,10 +7977,10 @@ sort-on@^4.1.0:
     arrify "^2.0.1"
     dot-prop "^5.0.0"
 
-sort-package-json@1.46.1:
-  version "1.46.1"
-  resolved "https://registry.yarnpkg.com/sort-package-json/-/sort-package-json-1.46.1.tgz#b7812bb53ec34ca69ac0ad920e31193fd983015c"
-  integrity sha512-jUkuCxcXCZD31eIJ/Zza62LRP0lzd4LNkY0z0q1kDSvfBfCmPotrHPXVrz6WTppbGeM2JzNyyARQLUEnK4dUyg==
+sort-package-json@1.48.0:
+  version "1.48.0"
+  resolved "https://registry.yarnpkg.com/sort-package-json/-/sort-package-json-1.48.0.tgz#476043cdde65346900296d5035a0b20560c954e5"
+  integrity sha512-VAC5THvyGFQFeVLbKcGNPzny5u/heOwks9tzTTLvL8nX9v7zZjpx36/itcJtqp8gI+r57Rw1RVYT6Ecy+3N6+Q==
   dependencies:
     detect-indent "^6.0.0"
     detect-newline "3.1.0"
