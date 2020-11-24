@@ -95,8 +95,8 @@
     "sort-on": "^4.1.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.12.7",
-    "@babel/core": "7.12.7",
+    "@babel/cli": "7.12.8",
+    "@babel/core": "7.12.9",
     "@babel/node": "7.12.6",
     "@babel/preset-env": "7.12.7",
     "algoliasearch": "4.6.0",
