@@ -103,7 +103,7 @@
     "babel-eslint": "10.1.0",
     "csv-parse": "4.14.1",
     "dotenv": "8.2.0",
-    "eslint": "7.14.0",
+    "eslint": "7.15.0",
     "eslint-plugin-import": "2.22.1",
     "got": "11.8.0",
     "lodash": "4.17.20",
