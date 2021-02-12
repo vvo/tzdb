@@ -95,10 +95,10 @@
     "sort-on": "^4.1.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.12.13",
-    "@babel/core": "7.12.13",
-    "@babel/node": "7.12.13",
-    "@babel/preset-env": "7.12.13",
+    "@babel/cli": "7.12.16",
+    "@babel/core": "7.12.16",
+    "@babel/node": "7.12.16",
+    "@babel/preset-env": "7.12.16",
     "algoliasearch": "4.8.5",
     "babel-eslint": "10.1.0",
     "csv-parse": "4.14.2",
