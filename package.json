@@ -91,16 +91,16 @@
     }
   },
   "dependencies": {
-    "luxon": "1.25.0"
+    "luxon": "1.26.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.12.17",
-    "@babel/core": "7.12.17",
-    "@babel/node": "7.12.17",
-    "@babel/preset-env": "7.12.17",
+    "@babel/cli": "7.13.10",
+    "@babel/core": "7.13.10",
+    "@babel/node": "7.13.10",
+    "@babel/preset-env": "7.13.10",
     "algoliasearch": "4.8.6",
     "babel-eslint": "10.1.0",
-    "csv-parse": "4.14.2",
+    "csv-parse": "4.15.3",
     "dotenv": "8.2.0",
     "eslint": "7.22.0",
     "eslint-plugin-import": "2.22.1",
@@ -109,7 +109,7 @@
     "p-each-series": "2.2.0",
     "prettier": "2.2.1",
     "prettier-plugin-packagejson": "2.2.10",
-    "semantic-release": "17.3.9",
+    "semantic-release": "17.4.2",
     "semantic-release-cli": "5.4.3",
     "unzipper": "0.10.11"
   },
