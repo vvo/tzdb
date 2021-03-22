@@ -96,8 +96,8 @@
   "devDependencies": {
     "@babel/cli": "7.13.10",
     "@babel/core": "7.13.10",
-    "@babel/node": "7.13.10",
-    "@babel/preset-env": "7.13.10",
+    "@babel/node": "7.13.12",
+    "@babel/preset-env": "7.13.12",
     "algoliasearch": "4.8.6",
     "babel-eslint": "10.1.0",
     "csv-parse": "4.15.3",
