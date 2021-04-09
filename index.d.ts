@@ -19,6 +19,10 @@ interface TimeZone extends RawTimeZone {
   currentTimeFormat: string;
 }
 
+interface TimeZoneOptions {
+  includeUtc?: boolean;
+}
+
 export const rawTimeZones: RawTimeZone[];
 export const timeZonesNames: TimeZoneName[];
-export function getTimeZones(): TimeZone[];
+export function getTimeZones(opts?: TimeZoneOptions): TimeZone[];
