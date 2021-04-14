@@ -35,6 +35,27 @@ async function run() {
     countriesToContinents[countryFields[0]] = countryFields[8];
   }
 
+  // prepare deprecated time zone names map, example:
+  // {
+  //   'Australia/Sydney': [ 'Australia/ACT', 'Australia/Canberra', 'Australia/NSW' ].
+  //   ...
+  // }
+  const { body: deprecatedNamesData } = await got(
+    "https://data.iana.org/time-zones/data/backward",
+  );
+
+  const deprecatedNames = {};
+
+  for (const line of deprecatedNamesData.split("\n")) {
+    if (line.startsWith("#") || line === "") {
+      continue;
+    }
+
+    const [, newName, deprecatedName] = line.replace(/\t+/g, ",").split(",");
+    deprecatedNames[newName] ??= [];
+    deprecatedNames[newName].push(deprecatedName);
+  }
+
   const citiesCsv = got
     .stream("https://download.geonames.org/export/dump/cities15000.zip")
     .pipe(unzipper.ParseOne());
@@ -44,7 +65,6 @@ async function run() {
       delimiter: "\t",
     }),
   );
-  // const updatedCities = [];
   const timeZoneCities = {};
 
   for await (const cityFields of citiesParser) {
@@ -164,11 +184,25 @@ async function run() {
         return name;
       });
 
-      const group = uniq(
+      const uniqueCitiesTimeZones = uniq(
         timeZoneWithCities.map(({ timeZoneName }) => {
           return timeZoneName;
         }),
       );
+
+      const deprecatedTimeZonesForGroup = uniqueCitiesTimeZones
+        .filter((timeZoneName) => {
+          return deprecatedNames[timeZoneName];
+        })
+        .map((timeZoneName) => {
+          return deprecatedNames[timeZoneName];
+        })
+        .flat();
+
+      const group = uniq([
+        ...uniqueCitiesTimeZones,
+        ...deprecatedTimeZonesForGroup,
+      ]);
 
       const { timeZoneName } = mainCitiesObject[0];
 
