@@ -5,6 +5,7 @@ This is a list and npm package of:
 - "simplified" [IANA time zones](https://www.iana.org/time-zones) with their alternative names like `Pacific Time` instead of `America/Los_Angeles`, along with major cities for each time zone.
 - all existing raw IANA time zones names
 - "raw" offsets along with current time offsets
+- also includes [deprecated time zone names](https://data.iana.org/time-zones/data/backward) for compatibility
 
 The data and npm packages are **automatically updated** whenever there are changes to https://www.geonames.org/ which is generated from IANA databases.
 
