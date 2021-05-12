@@ -95,9 +95,9 @@
   },
   "devDependencies": {
     "@babel/cli": "7.13.16",
-    "@babel/core": "7.14.0",
+    "@babel/core": "7.14.2",
     "@babel/node": "7.13.13",
-    "@babel/preset-env": "7.14.1",
+    "@babel/preset-env": "7.14.2",
     "babel-eslint": "10.1.0",
     "csv-parse": "4.15.4",
     "dotenv": "9.0.2",
