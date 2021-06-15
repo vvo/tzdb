@@ -107,7 +107,7 @@
     "lodash": "4.17.21",
     "prettier": "2.2.1",
     "prettier-plugin-packagejson": "2.2.11",
-    "semantic-release": "17.4.3",
+    "semantic-release": "17.4.4",
     "semantic-release-cli": "5.4.3",
     "unzipper": "0.10.11"
   },
