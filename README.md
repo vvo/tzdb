@@ -1,5 +1,15 @@
 # tzdb [![GitHub license](https://img.shields.io/github/license/vvo/tzdb?style=flat)](https://github.com/vvo/tzdb/blob/master/LICENSE) [![Tests](https://github.com/vvo/tzdb/workflows/CI/badge.svg)](https://github.com/vvo/tzdb/actions) [![npm version](https://badge.fury.io/js/%40vvo%2Ftzdb.svg)](https://www.npmjs.com/package/@vvo/tzdb) [![minizipped size](https://badgen.net/bundlephobia/minzip/@vvo/tzdb)](https://bundlephobia.com/result?p=@vvo/tzdb) ![npm](https://img.shields.io/npm/dm/@vvo/tzdb)
 
+_🕙 Always up to date list of time zones, with grouping and major cities_
+
+---
+
+[![Secret banner](/secret.png)](https://www.joinsecret.com/?via=vincentvoyer&utm_source=VincentVoyer&utm_medium=referral&utm_campaign=5_GitHub_nextironsession "Join Secret, The #1 Platform for Startup Deals & Resources")
+
+<h2 align="center">👆 Here's how I bootstrap my indie projects: I use startup credits.<br/>Use my code <u>VVO20</u> and get 20% off <a href="https://www.joinsecret.com/?via=vincentvoyer&utm_source=VincentVoyer&utm_medium=referral&utm_campaign=5_GitHub_nextironsession">Secret</a>.</h2>
+
+---
+
 This is a list and npm package of:
 
 - "simplified" [IANA time zones](https://www.iana.org/time-zones) with their alternative names like `Pacific Time` instead of `America/Los_Angeles`, along with major cities for each time zone.
