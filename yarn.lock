@@ -8162,10 +8162,10 @@ safe-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-semantic-release-cli@5.4.3:
-  version "5.4.3"
-  resolved "https://registry.yarnpkg.com/semantic-release-cli/-/semantic-release-cli-5.4.3.tgz#660beeecdfbaf7232e2ef75d2892282ff918581b"
-  integrity sha512-m0o7ofAf1jWDva6FWhIiqABYbywV81iQW8nkrhlDTA+J59YmSxJ1wW2FQ5xHuJCBtO56i4A4McK1kdxNjqNb7Q==
+semantic-release-cli@5.4.4:
+  version "5.4.4"
+  resolved "https://registry.yarnpkg.com/semantic-release-cli/-/semantic-release-cli-5.4.4.tgz#22e2dcabe9a5d7c9727abf4bea78d012ac1860ba"
+  integrity sha512-z/oX4LjhTon7+bpXcEvgQz8iRuWAhEPtDvVyvycNAq4dBopX+oXIMe3TlmtNWShhT2kQTDlXGZnXJxVtDMQgIg==
   dependencies:
     babel-polyfill "^6.26.0"
     babel-preset-env "^1.6.1"
