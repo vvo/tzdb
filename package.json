@@ -99,7 +99,7 @@
     "@babel/node": "7.13.13",
     "@babel/preset-env": "7.14.9",
     "babel-eslint": "10.1.0",
-    "csv-parse": "4.15.4",
+    "csv-parse": "4.16.3",
     "dotenv": "9.0.2",
     "eslint": "7.32.0",
     "eslint-plugin-import": "2.24.2",
