@@ -91,7 +91,7 @@
     }
   },
   "dependencies": {
-    "luxon": "1.26.0"
+    "luxon": "1.28.0"
   },
   "devDependencies": {
     "@babel/cli": "7.13.16",
