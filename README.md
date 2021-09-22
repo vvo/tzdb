@@ -4,10 +4,6 @@ _🕙 Always up to date list of time zones, with grouping and major cities_
 
 ---
 
-[![Secret banner](/secret.png)](https://www.joinsecret.com/?via=vincentvoyer&utm_source=VincentVoyer&utm_medium=referral&utm_campaign=6_GitHub_tzdb "Join Secret, The #1 Platform for Startup Deals & Resources")
-
-<h2 align="center">👆 Here's how I bootstrap my indie projects: I use startup credits.<br/>Use my code <u>VVO20</u> and get 20% off <a href="https://www.joinsecret.com/?via=vincentvoyer&utm_source=VincentVoyer&utm_medium=referral&utm_campaign=6_GitHub_tzdb">Secret</a>.</h2>
-
 This is a list and npm package of:
 
 - "simplified" [IANA time zones](https://www.iana.org/time-zones) with their alternative names like `Pacific Time` instead of `America/Los_Angeles`, along with major cities for each time zone.
