@@ -105,7 +105,7 @@
     "eslint-plugin-import": "2.24.2",
     "got": "11.8.2",
     "lodash": "4.17.21",
-    "prettier": "2.2.1",
+    "prettier": "2.4.1",
     "prettier-plugin-packagejson": "2.2.13",
     "semantic-release": "17.4.7",
     "semantic-release-cli": "5.4.4",
