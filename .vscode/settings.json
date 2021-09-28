@@ -2,6 +2,9 @@
   "editor.formatOnSave": true,
   "eslint.packageManager": "npm",
   "eslint.alwaysShowStatus": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[markdown]": {
     "editor.formatOnSave": true
