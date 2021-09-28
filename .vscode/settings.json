@@ -1,10 +1,6 @@
 {
   "editor.formatOnSave": true,
-  "search.exclude": {
-    ".yarn": true,
-    "yarn.lock": true
-  },
-  "eslint.packageManager": "yarn",
+  "eslint.packageManager": "npm",
   "eslint.alwaysShowStatus": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[markdown]": {
