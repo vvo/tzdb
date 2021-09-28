@@ -36,8 +36,8 @@
     "format": "prettier --write '**/*.*' && eslint . --fix",
     "generate": "babel-node generate.js",
     "lint": "prettier --check '**/*.*' && eslint .",
-    "prepublishOnly": "yarn build",
-    "test": "yarn lint && yarn build"
+    "prepublishOnly": "npm run build",
+    "test": "npm run lint && npm run build"
   },
   "babel": {
     "presets": [
