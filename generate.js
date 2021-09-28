@@ -108,9 +108,12 @@ async function run() {
   for await (const timeZoneFields of timeZonesParser) {
     const timeZoneName = timeZoneFields[1];
 
-    const tz = DateTime.fromObject({
-      zone: timeZoneName,
-    });
+    const tz = DateTime.fromObject(
+      {},
+      {
+        zone: timeZoneName,
+      },
+    );
 
     if (tz.isValid !== true) {
       console.error(
@@ -206,12 +209,16 @@ async function run() {
 
       const { timeZoneName } = mainCitiesObject[0];
 
-      const januaryDate = DateTime.fromObject({
-        locale: "en-US",
-        zone: timeZoneName,
-        day: 1,
-        month: 1,
-      });
+      const januaryDate = DateTime.fromObject(
+        {
+          day: 1,
+          month: 1,
+        },
+        {
+          locale: "en-US",
+          zone: timeZoneName,
+        },
+      );
 
       let alternativeTimeZoneName = januaryDate
         .toFormat(`ZZZZZ`)
