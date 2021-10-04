@@ -5,7 +5,7 @@ on:
     branches:
       - main
   schedule:
-    - cron:  '*/15 * * * *'
+    - cron:  '0 14 * * *'
 
 jobs:
   release:
@@ -41,10 +41,10 @@ jobs:
 
           # Optional glob pattern of files which should be added to the commit
           file_pattern: raw-time-zones.json time-zones-names.json
-      # - name: Release if necessary
-      #   if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next'
-      #   run: npx semantic-release
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Release if necessary
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next'
+        run: npx semantic-release
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
