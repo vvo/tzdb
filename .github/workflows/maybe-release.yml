@@ -31,10 +31,6 @@ jobs:
       - run: npm ci
       - name: Generate new data
         run: npm run generate
-        env:
-          ALGOLIA_APPLICATION_ID: ${{ secrets.ALGOLIA_APPLICATION_ID }}
-          ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}
-          ALGOLIA_INDEX_NAME: ${{ secrets.ALGOLIA_INDEX_NAME }}
       - name: Commit changes if necessary
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
