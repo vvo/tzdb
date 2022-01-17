@@ -106,7 +106,7 @@
     "p-each-series": "2.2.0",
     "prettier": "2.4.1",
     "prettier-plugin-packagejson": "2.2.13",
-    "semantic-release": "18.0.0",
+    "semantic-release": "18.0.1",
     "semantic-release-cli": "5.4.4",
     "unzipper": "0.10.11"
   },
