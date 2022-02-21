@@ -2,6 +2,8 @@ import fs from "fs";
 import path from "path";
 
 import { parse as csvParse } from "csv-parse";
+// eslint-disable-next-line import/no-unresolved
+import { parse as csvParseSync } from "csv-parse/sync";
 import unzipper from "unzipper";
 import got from "got";
 import { DateTime } from "luxon";
@@ -26,14 +28,18 @@ async function run() {
     AN: "Antarctica",
   };
 
-  const countriesParser = got
-    .stream("https://download.geonames.org/export/dump/countryInfo.txt")
-    .pipe(
-      csvParse({
-        delimiter: "\t",
-        skipRecordsWithError: true,
-      }),
-    );
+  const { body: countriesData } = await got(
+    "https://download.geonames.org/export/dump/countryInfo.txt",
+  );
+
+  const countriesDataValidCsv = countriesData
+    .split("EquivalentFipsCode")[1]
+    .trim();
+
+  const countriesParser = csvParseSync(countriesDataValidCsv, {
+    delimiter: "\t",
+    skipRecordsWithError: true,
+  });
   const countries = {};
   const countriesToContinents = {};
 
