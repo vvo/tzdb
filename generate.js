@@ -1,17 +1,19 @@
 import fs from "fs";
 import path from "path";
 
-import parse from "csv-parse";
+import { parse as csvParse } from "csv-parse";
 import unzipper from "unzipper";
 import got from "got";
-import dotenv from "dotenv";
 import { DateTime } from "luxon";
 import { orderBy, uniq } from "lodash";
+import tzdata from "tzdata";
 
-import formatTimeZone from "./lib/formatTimeZone.js";
 import abbreviations from "./abbreviations.json";
+import formatTimeZone from "./lib/formatTimeZone.js";
 
-dotenv.config();
+const timeZonesLinks = Object.entries(tzdata.zones).filter(([key, value]) => {
+  return typeof value === "string";
+});
 
 async function run() {
   const continents = {
@@ -26,7 +28,12 @@ async function run() {
 
   const countriesParser = got
     .stream("https://download.geonames.org/export/dump/countryInfo.txt")
-    .pipe(parse({ delimiter: "\t" }));
+    .pipe(
+      csvParse({
+        delimiter: "\t",
+        skipRecordsWithError: true,
+      }),
+    );
   const countries = {};
   const countriesToContinents = {};
 
@@ -61,8 +68,9 @@ async function run() {
     .pipe(unzipper.ParseOne());
 
   const citiesParser = citiesCsv.pipe(
-    parse({
+    csvParse({
       delimiter: "\t",
+      skipRecordsWithError: true,
     }),
   );
   const timeZoneCities = {};
@@ -101,7 +109,9 @@ async function run() {
 
   const timeZonesParser = got
     .stream("http://download.geonames.org/export/dump/timeZones.txt")
-    .pipe(parse({ delimiter: "\t", from_line: 2 }));
+    .pipe(
+      csvParse({ delimiter: "\t", from_line: 2, skipRecordsWithError: true }),
+    );
 
   const countryStats = {};
 
@@ -258,6 +268,29 @@ async function run() {
     }
   }
 
+  timeZonesLinks.forEach(([link, target]) => {
+    const isLinkAlreadyAMainTimeZone = rawTimeZones.some((rawTimeZone) => {
+      return rawTimeZone.name === link;
+    });
+
+    if (isLinkAlreadyAMainTimeZone) {
+      return;
+    }
+
+    const timeZone = rawTimeZones.find((rawTimeZone) => {
+      return rawTimeZone.name === target;
+    });
+
+    // We could try to find the name inside the group of a timezone, if someone asks for that let's do it
+    if (timeZone === undefined) {
+      return;
+    }
+
+    if (!timeZone.group.includes(link)) {
+      timeZone.group.push(link);
+    }
+  });
+
   fs.writeFileSync(
     path.join(__dirname, "time-zones-names.json"),
     JSON.stringify(timeZonesNames.sort()).replace(/",/g, '",\n'),
@@ -293,6 +326,12 @@ function getAbbreviation({ date, timeZoneName }) {
   if (exactAbbreviation) {
     return exactAbbreviation;
   }
+
+  console.log(
+    'Could not find abbreviation for "%s"',
+    timeZoneName,
+    date.toFormat(`ZZZZ`),
+  );
 
   return date.toFormat(`ZZZZ`);
 }
