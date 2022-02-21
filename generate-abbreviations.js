@@ -58,7 +58,7 @@ async function run() {
       sortKeys({ ...abbreviations, ...customAbbreviations }),
       null,
       2,
-    ),
+    ).replace(/}/g, "}\n"),
   );
 }
 

@@ -91,6 +91,12 @@
       ]
     }
   },
+  "release": {
+    "branches": [
+      "main",
+      "next"
+    ]
+  },
   "devDependencies": {
     "@babel/cli": "7.17.3",
     "@babel/core": "7.17.5",
@@ -115,12 +121,6 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "release": {
-    "branches": [
-      "main",
-      "next"
-    ]
   },
   "renovate": {
     "extends": [

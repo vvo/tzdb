@@ -11,7 +11,7 @@ import tzdata from "tzdata";
 import abbreviations from "./abbreviations.json";
 import formatTimeZone from "./lib/formatTimeZone.js";
 
-const timeZonesLinks = Object.entries(tzdata.zones).filter(([key, value]) => {
+const timeZonesLinks = Object.entries(tzdata.zones).filter(([, value]) => {
   return typeof value === "string";
 });
 
