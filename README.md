@@ -22,7 +22,7 @@ npm add @vvo/tzdb
 Usage:
 
 ```js
-import { getTimeZones, rawTimeZones, timeZonesNames } from "@vvo/tzdb";
+import { getTimeZones, rawTimeZones, timeZonesNames, abbreviations } from "@vvo/tzdb";
 ```
 
 ## API
@@ -133,6 +133,35 @@ This is an array of time zone names:
   // ...
 ];
 ```
+
+### abbreviations
+
+This is an object mapping timezone abbreviations to their full forms:
+
+```js
+{
+  // ...
+  "Australian Central Daylight Time": "ACDT",
+  "Australian Central Standard Time": "ACST",
+  "Australian Central Time": "ACT",
+  "Australian Central Western Standard Time": "ACWST",
+  "Australian Eastern Daylight Time": "AEDT",
+  "Australian Eastern Standard Time": "AEST",
+  "Australian Eastern Time": "AET",
+  "Australian Western Daylight Time": "AWDT",
+  "Australian Western Standard Time": "AWST",
+  "Azerbaijan Summer Time": "AZST",
+  "Azerbaijan Time": "AZT",
+  "Azores Summer Time": "AZOST",
+  "Azores Time": "AZOT",
+  "Bangladesh Standard Time": "BST",
+  "Bhutan Time": "BTT",
+  "Bolivia Time": "BOT",
+  // ...
+};
+```
+
+**Caution:** Although abbreviations can be easy to lookup, they can be misleading. For example: CST can refer to Central Standard Time (-06.00 UTC), China Standard Time (+06.00 UTC) or Cuba Standard Time (-05.00 UTC). And abbreviation full forms don't directly map to any property in the time zone objects returned by `rawTimeZones` or `getTimeZones()`.
 
 ## Notes
 
