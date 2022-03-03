@@ -25,6 +25,7 @@
     "dist/",
     "lib/",
     "time-zones-names.json",
+    "abbreviations.json",
     "raw-time-zones.json",
     "LICENSE",
     "README.md",
