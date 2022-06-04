@@ -114,7 +114,7 @@
     "p-each-series": "2.2.0",
     "prettier": "2.5.1",
     "prettier-plugin-packagejson": "2.2.15",
-    "semantic-release": "18.0.1",
+    "semantic-release": "19.0.0",
     "semantic-release-cli": "5.4.4",
     "sort-keys": "4.2.0",
     "tzdata": "1.0.29",
