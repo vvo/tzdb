@@ -108,7 +108,7 @@
     "csv-parse": "5.0.4",
     "eslint": "7.32.0",
     "eslint-plugin-import": "2.25.4",
-    "got": "11.8.3",
+    "got": "11.8.5",
     "lodash": "4.17.21",
     "luxon": "2.3.0",
     "p-each-series": "2.2.0",
