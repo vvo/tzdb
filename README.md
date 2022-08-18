@@ -31,6 +31,10 @@ import { getTimeZones, rawTimeZones, timeZonesNames, abbreviations } from "@vvo/
 
 ```js
 const timeZones = getTimeZones();
+
+// You can also provide an optional parameter to include UTC in the result.
+// This adds a time zone with the name "UTC" and a fixed offset of 0.
+const timeZonesWithUtc = getTimeZones({ includeUtc: true });
 ```
 
 This method returns an array of time zones objects:
