@@ -99,10 +99,10 @@
     ]
   },
   "devDependencies": {
-    "@babel/cli": "7.17.3",
-    "@babel/core": "7.17.5",
-    "@babel/node": "7.16.8",
-    "@babel/preset-env": "7.16.11",
+    "@babel/cli": "7.25.9",
+    "@babel/core": "7.25.9",
+    "@babel/node": "7.25.9",
+    "@babel/preset-env": "7.25.9",
     "babel-eslint": "10.1.0",
     "cheerio": "1.0.0-rc.10",
     "csv-parse": "5.0.4",
