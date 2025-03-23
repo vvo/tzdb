@@ -104,21 +104,21 @@
     "@babel/node": "7.16.8",
     "@babel/preset-env": "7.16.11",
     "babel-eslint": "10.1.0",
-    "cheerio": "1.0.0-rc.10",
+    "cheerio": "1.0.0",
     "csv-parse": "5.0.4",
     "eslint": "7.32.0",
     "eslint-plugin-import": "2.25.4",
     "got": "11.8.3",
     "lodash": "4.17.21",
-    "luxon": "2.3.0",
+    "luxon": "2.3.2",
     "p-each-series": "2.2.0",
     "prettier": "2.5.1",
-    "prettier-plugin-packagejson": "2.2.15",
+    "prettier-plugin-packagejson": "2.2.18",
     "semantic-release": "18.0.1",
     "semantic-release-cli": "5.4.4",
     "sort-keys": "4.2.0",
-    "tzdata": "1.0.29",
-    "unzipper": "0.10.11"
+    "tzdata": "1.0.44",
+    "unzipper": "0.10.14"
   },
   "publishConfig": {
     "access": "public"
