@@ -99,13 +99,13 @@
     ]
   },
   "devDependencies": {
-    "@babel/cli": "7.17.3",
-    "@babel/core": "7.17.5",
-    "@babel/node": "7.16.8",
-    "@babel/preset-env": "7.16.11",
+    "@babel/cli": "7.27.2",
+    "@babel/core": "7.27.1",
+    "@babel/node": "7.27.1",
+    "@babel/preset-env": "7.27.2",
     "babel-eslint": "10.1.0",
-    "cheerio": "1.0.0-rc.10",
-    "csv-parse": "5.0.4",
+    "cheerio": "1.0.0",
+    "csv-parse": "5.6.0",
     "eslint": "7.32.0",
     "eslint-plugin-import": "2.25.4",
     "got": "11.8.3",
@@ -113,12 +113,12 @@
     "luxon": "2.3.0",
     "p-each-series": "2.2.0",
     "prettier": "2.5.1",
-    "prettier-plugin-packagejson": "2.2.15",
+    "prettier-plugin-packagejson": "2.5.14",
     "semantic-release": "18.0.1",
-    "semantic-release-cli": "5.4.4",
+    "semantic-release-cli": "5.4.6",
     "sort-keys": "4.2.0",
-    "tzdata": "1.0.29",
-    "unzipper": "0.10.11"
+    "tzdata": "1.0.44",
+    "unzipper": "0.12.3"
   },
   "publishConfig": {
     "access": "public"
@@ -139,5 +139,6 @@
       "before 3am on Monday"
     ],
     "groupName": "all"
-  }
+  },
+  "packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977"
 }
