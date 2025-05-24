@@ -36,8 +36,8 @@ importers:
         specifier: 2.25.4
         version: 2.25.4(eslint@7.32.0)
       got:
-        specifier: 11.8.3
-        version: 11.8.3
+        specifier: 11.8.5
+        version: 11.8.5
       lodash:
         specifier: 4.17.21
         version: 4.17.21
@@ -1808,8 +1808,8 @@ packages:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
 
-  got@11.8.3:
-    resolution: {integrity: sha512-7gtQ5KiPh1RtGS9/Jbv1ofDpBFuq42gyfEib+ejaRBJuj/3tQFeR5+gw57e4ipaU8c/rCjvX6fkQz2lyDlGAOg==}
+  got@11.8.5:
+    resolution: {integrity: sha512-o0Je4NvQObAuZPHLFoRSkdG2lTgtcynqymzg2Vupdx6PorhaT5MCbIyXG6d4D94kk8ZG57QeosgdiqfJWhEhlQ==}
     engines: {node: '>=10.19.0'}
 
   got@9.6.0:
@@ -6120,7 +6120,7 @@ snapshots:
 
   gopd@1.2.0: {}
 
-  got@11.8.3:
+  got@11.8.5:
     dependencies:
       '@sindresorhus/is': 4.6.0
       '@szmarczak/http-timer': 4.0.6
