@@ -113,7 +113,7 @@
     "luxon": "2.3.0",
     "p-each-series": "2.2.0",
     "prettier": "2.5.1",
-    "prettier-plugin-packagejson": "2.5.18",
+    "prettier-plugin-packagejson": "2.5.19",
     "semantic-release": "18.0.1",
     "semantic-release-cli": "5.4.6",
     "sort-keys": "4.2.0",
