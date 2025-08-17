@@ -63,8 +63,8 @@ importers:
         specifier: 4.2.0
         version: 4.2.0
       tzdata:
-        specifier: 1.0.44
-        version: 1.0.44
+        specifier: 1.0.45
+        version: 1.0.45
       unzipper:
         specifier: 0.12.3
         version: 0.12.3
@@ -3726,8 +3726,8 @@ packages:
   typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
 
-  tzdata@1.0.44:
-    resolution: {integrity: sha512-xJ8xcdoFRwFpIQ90QV3WFXJNCO/feNn9vHVsZMJiKmtMYuo7nvF6CTpBc+SgegC1fb/3L+m32ytXT9XrBjrINg==}
+  tzdata@1.0.45:
+    resolution: {integrity: sha512-p5+G49/ilH5Olaotf41W5mw56ZvvaGIPjslqnu2VJQYeRrWpSy80pw110udPW3tyiLW8OWJzywABucaL1n0Kag==}
 
   uglify-js@3.19.3:
     resolution: {integrity: sha512-v3Xu+yuwBXisp6QYTcH4UbH+xYJXqnq2m/LtQVWKWzYc1iehYnLixoQDN9FH6/j9/oybfd6W9Ghwkl8+UMKTKQ==}
@@ -7975,7 +7975,7 @@ snapshots:
 
   typedarray@0.0.6: {}
 
-  tzdata@1.0.44: {}
+  tzdata@1.0.45: {}
 
   uglify-js@3.19.3:
     optional: true
