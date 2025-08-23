@@ -27,6 +27,7 @@
     "time-zones-names.json",
     "abbreviations.json",
     "raw-time-zones.json",
+    "metadata.json",
     "LICENSE",
     "README.md",
     "index.d.ts"
@@ -117,7 +118,7 @@
     "semantic-release": "18.0.1",
     "semantic-release-cli": "5.4.6",
     "sort-keys": "4.2.0",
-    "tzdata": "1.0.45",
+    "tzdata": "1.0.46",
     "unzipper": "0.12.3"
   },
   "publishConfig": {

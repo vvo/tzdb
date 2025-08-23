@@ -8,12 +8,12 @@ import unzipper from "unzipper";
 import got from "got";
 import { DateTime } from "luxon";
 import { orderBy, uniq } from "lodash";
-import tzdata from "tzdata";
+import { zones, version } from "tzdata";
 
 import abbreviations from "./abbreviations.json";
 import formatTimeZone from "./lib/formatTimeZone.js";
 
-const timeZonesLinks = Object.entries(tzdata.zones).filter(([, value]) => {
+const timeZonesLinks = Object.entries(zones).filter(([, value]) => {
   return typeof value === "string";
 });
 
@@ -311,6 +311,11 @@ async function run() {
         "mainCities[0]",
       ]),
     ).replace(/},/g, "},\n"),
+  );
+
+  fs.writeFileSync(
+    path.join(__dirname, "metadata.json"),
+    JSON.stringify({ ianaTzVersion: version }),
   );
 }
 
