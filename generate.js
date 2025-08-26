@@ -8,16 +8,24 @@ import unzipper from "unzipper";
 import got from "got";
 import { DateTime } from "luxon";
 import { orderBy, uniq } from "lodash";
-import { zones, version } from "tzdata";
+import * as tzdata from "tzdata";
 
 import abbreviations from "./abbreviations.json";
 import formatTimeZone from "./lib/formatTimeZone.js";
 
-const timeZonesLinks = Object.entries(zones).filter(([, value]) => {
+const timeZonesLinks = Object.entries(tzdata.zones).filter(([, value]) => {
   return typeof value === "string";
 });
 
 async function run() {
+  // Validate time zone versions match
+  if (process.versions.tz !== tzdata.version) {
+    console.error(
+      `Time zone versions do not match\n  Node tz version: ${process.versions.tz}\n  tzdata version: ${tzdata.version}`,
+    );
+    process.exit(1);
+  }
+
   const continents = {
     AF: "Africa",
     AS: "Asia",
@@ -315,7 +323,7 @@ async function run() {
 
   fs.writeFileSync(
     path.join(__dirname, "metadata.json"),
-    JSON.stringify({ ianaTzVersion: version }),
+    JSON.stringify({ ianaTzVersion: tzdata.version }),
   );
 }
 
