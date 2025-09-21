@@ -22,7 +22,7 @@ npm add @vvo/tzdb
 Usage:
 
 ```js
-import { getTimeZones, rawTimeZones, timeZonesNames, abbreviations } from "@vvo/tzdb";
+import { getTimeZones, rawTimeZones, timeZonesNames, abbreviations, metadata } from "@vvo/tzdb";
 ```
 
 ## API
@@ -166,6 +166,16 @@ This is an object mapping timezone abbreviations to their full forms:
 ```
 
 **Caution:** Although abbreviations can be easy to lookup, they can be misleading. For example: CST can refer to Central Standard Time (-06.00 UTC), China Standard Time (+06.00 UTC) or Cuba Standard Time (-05.00 UTC). And abbreviation full forms don't directly map to any property in the time zone objects returned by `rawTimeZones` or `getTimeZones()`.
+
+### metadata
+
+This is an object containing metadata about the package:
+
+```js
+{
+  ianaTzVersion: "2025b", // The IANA time zone database version
+}
+```
 
 ## Notes
 
