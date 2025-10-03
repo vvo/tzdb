@@ -27,6 +27,7 @@
     "time-zones-names.json",
     "abbreviations.json",
     "raw-time-zones.json",
+    "metadata.json",
     "LICENSE",
     "README.md",
     "index.d.ts"
