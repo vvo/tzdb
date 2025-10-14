@@ -23,6 +23,11 @@ interface TimeZoneOptions {
   includeUtc?: boolean;
 }
 
+interface Metadata {
+  ianaTzVersion: string;
+}
+
 export const rawTimeZones: RawTimeZone[];
 export const timeZonesNames: TimeZoneName[];
 export function getTimeZones(opts?: TimeZoneOptions): TimeZone[];
+export const metadata: Metadata;
