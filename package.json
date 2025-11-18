@@ -110,7 +110,7 @@
     "eslint-plugin-import": "2.25.4",
     "got": "11.8.6",
     "lodash": "4.17.21",
-    "luxon": "2.3.0",
+    "luxon": "2.5.2",
     "p-each-series": "2.2.0",
     "prettier": "2.5.1",
     "prettier-plugin-packagejson": "2.5.19",
