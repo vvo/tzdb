@@ -42,8 +42,8 @@ importers:
         specifier: 4.17.21
         version: 4.17.21
       luxon:
-        specifier: 2.3.0
-        version: 2.3.0
+        specifier: 2.5.2
+        version: 2.5.2
       p-each-series:
         specifier: 2.2.0
         version: 2.2.0
@@ -2398,8 +2398,8 @@ packages:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
-  luxon@2.3.0:
-    resolution: {integrity: sha512-gv6jZCV+gGIrVKhO90yrsn8qXPKD8HYZJtrUDSfEbow8Tkw84T9OnCyJhWvnJIaIF/tBuiAjZuQHUt1LddX2mg==}
+  luxon@2.5.2:
+    resolution: {integrity: sha512-Yg7/RDp4nedqmLgyH0LwgGRvMEKVzKbUdkBYyCosbHgJ+kaOUx0qzSiSatVc3DFygnirTPYnMM2P5dg2uH1WvA==}
     engines: {node: '>=12'}
 
   make-dir@1.3.0:
@@ -6723,7 +6723,7 @@ snapshots:
     dependencies:
       yallist: 4.0.0
 
-  luxon@2.3.0: {}
+  luxon@2.5.2: {}
 
   make-dir@1.3.0:
     dependencies:
