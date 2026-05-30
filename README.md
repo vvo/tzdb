@@ -16,7 +16,11 @@ This is useful whenever you want to build a time zone select menu in your applic
 Installation:
 
 ```bash
-npm add @vvo/tzdb
+npm install @vvo/tzdb
+```
+
+```bash
+yarn add @vvo/tzdb
 ```
 
 Usage:
