@@ -25,4 +25,5 @@ interface TimeZoneOptions {
 
 export const rawTimeZones: RawTimeZone[];
 export const timeZonesNames: TimeZoneName[];
+export const abbreviations: {[key: string]: string}
 export function getTimeZones(opts?: TimeZoneOptions): TimeZone[];
