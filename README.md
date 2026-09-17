@@ -35,6 +35,10 @@ const timeZones = getTimeZones();
 // You can also provide an optional parameter to include UTC in the result.
 // This adds a time zone with the name "UTC" and a fixed offset of 0.
 const timeZonesWithUtc = getTimeZones({ includeUtc: true });
+
+// Additionally, you can provide a parameter to include base GMT Offsets in the result.
+// This adds a set of timezones for "Etc/GMT-14" through to "Etc/GMT+12" with matching fixed offsets.
+const timezoneWithGmtOffsets = getTimeZones({ includeGmtOffsets: true });
 ```
 
 This method returns an array of time zones objects:

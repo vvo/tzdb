@@ -21,6 +21,7 @@ interface TimeZone extends RawTimeZone {
 
 interface TimeZoneOptions {
   includeUtc?: boolean;
+  includeGmtOffsets?: boolean;
 }
 
 export const rawTimeZones: RawTimeZone[];
