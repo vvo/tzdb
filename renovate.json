@@ -6,6 +6,7 @@
     "helpers:pinGitHubActionDigests"
   ],
   "schedule": ["before 6am on monday"],
+  "platformAutomerge": false,
   "packageRules": [
     {
       "description": "The package has no runtime dependencies, CI tests every update. Waiting a week gives npm time to pull compromised releases before they reach the job that publishes.",
