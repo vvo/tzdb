@@ -13,45 +13,44 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/vvo/tzdb.git"
+    "url": "git+https://github.com/vvo/tzdb.git"
   },
   "license": "MIT",
   "author": "Vincent Voyer <vincent@codeagain.com>",
   "sideEffects": false,
-  "main": "dist/",
-  "module": "lib/",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./abbreviations.json": "./abbreviations.json",
+    "./raw-time-zones.json": "./raw-time-zones.json",
+    "./time-zones-names.json": "./time-zones-names.json",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist/",
-    "lib/",
-    "time-zones-names.json",
     "abbreviations.json",
     "raw-time-zones.json",
-    "LICENSE",
-    "README.md",
-    "index.d.ts"
+    "time-zones-names.json"
   ],
   "scripts": {
-    "build": "babel lib/ -d dist/ --source-maps --ignore '**/*.test.js' --delete-dir-on-start",
-    "postbuild": "cp index.d.ts dist/",
-    "format": "prettier --write '**/*.*' && eslint . --fix",
-    "generate": "babel-node generate.js",
-    "generate-abbreviations": "babel-node generate-abbreviations.js",
-    "lint": "prettier --check '**/*.*' && eslint .",
+    "build": "node scripts/build.ts",
+    "format": "prettier --write .",
+    "generate": "node scripts/generate.ts",
+    "lint": "prettier --check . && tsc",
     "prepublishOnly": "npm run build",
-    "test": "npm run lint && npm run build"
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "node": "12"
-          }
-        }
-      ]
-    ]
+    "test": "node scripts/build.ts && node --test 'test/**/*.test.ts'"
   },
   "prettier": {
     "trailingComma": "all",
@@ -64,34 +63,6 @@
       }
     ]
   },
-  "eslintConfig": {
-    "env": {
-      "es6": true,
-      "node": true
-    },
-    "parser": "babel-eslint",
-    "parserOptions": {
-      "ecmaVersion": 2019,
-      "sourceType": "module"
-    },
-    "extends": [
-      "eslint:recommended",
-      "plugin:import/recommended"
-    ],
-    "rules": {
-      "arrow-body-style": [
-        "error",
-        "always"
-      ],
-      "curly": "error",
-      "import/order": [
-        "error",
-        {
-          "newlines-between": "always"
-        }
-      ]
-    }
-  },
   "release": {
     "branches": [
       "main",
@@ -99,35 +70,19 @@
     ]
   },
   "devDependencies": {
-    "@babel/cli": "7.27.2",
-    "@babel/core": "7.27.7",
-    "@babel/node": "7.27.1",
-    "@babel/preset-env": "7.27.2",
-    "babel-eslint": "10.1.0",
-    "cheerio": "1.0.0",
-    "csv-parse": "5.6.0",
-    "eslint": "7.32.0",
-    "eslint-plugin-import": "2.25.4",
-    "got": "11.8.6",
-    "lodash": "4.17.23",
-    "luxon": "2.3.2",
-    "p-each-series": "2.2.0",
-    "prettier": "2.5.1",
-    "prettier-plugin-packagejson": "2.5.22",
-    "semantic-release": "18.0.1",
-    "semantic-release-cli": "5.4.6",
-    "sort-keys": "4.2.0",
-    "tzdata": "1.0.48",
-    "unzipper": "0.12.3"
+    "@types/node": "26.6.5",
+    "esbuild": "0.28.2",
+    "prettier": "3.9.10",
+    "semantic-release": "25.0.9",
+    "typescript": "7.0.2"
   },
+  "packageManager": "pnpm@12.11.2",
   "publishConfig": {
     "access": "public"
   },
   "renovate": {
     "extends": [
       "config:js-lib",
-      ":automergePatch",
-      ":automergeBranch",
       ":automergePatch",
       ":automergeBranch",
       ":automergeLinters",
@@ -139,6 +94,5 @@
       "before 3am on Monday"
     ],
     "groupName": "all"
-  },
-  "packageManager": "pnpm@10.11.1+sha512.e519b9f7639869dc8d5c3c5dfef73b3f091094b0a006d7317353c72b124e80e1afd429732e28705ad6bfa1ee879c1fce46c128ccebd3192101f43dd67c667912"
+  }
 }

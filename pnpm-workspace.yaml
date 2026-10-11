@@ -1,2 +1,2 @@
-ignoredBuiltDependencies:
-  - core-js
+allowBuilds:
+  esbuild: true
