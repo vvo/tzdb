@@ -1,2 +1,5 @@
 allowBuilds:
   esbuild: true
+# Skip versions published less than 7 days ago, npm usually pulls compromised
+# releases by then
+minimumReleaseAge: 10080

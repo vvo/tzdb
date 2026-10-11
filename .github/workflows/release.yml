@@ -15,8 +15,9 @@ permissions:
   pull-requests: write # comment on released pull requests
   id-token: write # npm trusted publishing, no NPM_TOKEN needed
 
+# Runs one at a time with the dependency updates, both push to main
 concurrency:
-  group: release
+  group: push-to-main
 
 jobs:
   release:
