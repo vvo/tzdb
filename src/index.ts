@@ -126,11 +126,10 @@ function translator(locale: string, date: Date) {
  * and operating systems keep up to date.
  */
 export function getTimeZones(options: TimeZoneOptions = {}): TimeZone[] {
-  const { includeUtc = false, includeGmtOffsets = false, locale } = options;
-  const now = new Date();
-  const translate = locale ? translator(locale, now) : undefined;
+  const { includeUtc = false, includeGmtOffsets = false, locale, date = new Date() } = options;
+  const translate = locale ? translator(locale, date) : undefined;
 
-  const offsets = rawTimeZones.map(({ name }) => getOffset(name, now));
+  const offsets = rawTimeZones.map(({ name }) => getOffset(name, date));
   // Runtimes without Intl time zone support get the standard offsets
   const hasIntl = offsets.some((offset) => offset !== undefined);
 

@@ -126,6 +126,7 @@ Options:
 - `locale`: translates `alternativeName`, `countryName` and `continentName`. With `"fr"`, Los Angeles
   shows as "-07:00 heure du Pacifique nord-américain - Los Angeles, ...". City names stay as they are.
 - `includeUtc`: adds `Etc/UTC`, whose group includes `UTC` and `GMT`.
+- `date`: computes the `current*` fields at this date instead of now, like the date of a meeting.
 - `includeGmtOffsets`: adds the fixed offsets `Etc/GMT-14` to `Etc/GMT+12`. As in POSIX, the sign
   is inverted: `Etc/GMT+5` is 5 hours behind UTC.
 
@@ -156,17 +157,17 @@ The IANA tz database release behind the data, like `"2026e"`.
 
 ## Compared to countries-and-timezones
 
-|                                    | @vvo/tzdb                    | countries-and-timezones             |
-| ---------------------------------- | ---------------------------- | ----------------------------------- |
-| Data updates                       | Every day, automatically     | By hand                             |
-| Current offsets                    | From the browser, at runtime | Computed when the package was built |
-| Grouped list with cities and names | Yes                          | No                                  |
-| Abbreviations that follow DST      | Yes                          | No                                  |
-| Translations                       | Any language the browser has | No                                  |
-| Country of a time zone             | 4 kB                         | 9 kB                                |
-| Everything                         | 17 kB                        | 9 kB                                |
+|                                   | @vvo/tzdb                    | countries-and-timezones             |
+| --------------------------------- | ---------------------------- | ----------------------------------- |
+| Data updates                      | Every day, automatically     | By hand                             |
+| Current offsets                   | From the browser, at runtime | Computed when the package was built |
+| Abbreviations that follow DST     | Yes                          | No                                  |
+| Translations                      | Any language the browser has | No                                  |
+| Country of a time zone            | 4 kB                         | 9 kB                                |
+| Picker list with cities and names | 17 kB                        | Not available                       |
 
-Sizes are minified and gzipped.
+Sizes are minified and gzipped. countries-and-timezones weighs 9 kB in total, without cities, display
+names or abbreviations.
 
 ## How time zones are grouped
 
