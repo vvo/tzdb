@@ -171,9 +171,10 @@ names or abbreviations.
 
 ## How time zones are grouped
 
-Zones share an entry when they are in the same country and their clocks show the same time for the
-next two years. Detroit and New York had different rules a century ago, so IANA keeps both, but
-they share an entry today.
+Zones share an entry when they are in the same country and their clocks showed the same time for
+the past year and will for the next two. Detroit and New York had different rules a century ago,
+so IANA keeps both, but they share an entry today. Zones that just changed their rules, like
+Edmonton, keep their own entry for a year, while browsers catch up.
 
 `alternativeName` is the English name from [CLDR](https://cldr.unicode.org/) without "Standard",
 "Daylight" or "Summer". When summer and winter names differ, like "Greenwich Mean Time" and "British
