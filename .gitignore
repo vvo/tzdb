@@ -1,13 +1,3 @@
-# dependencies
-/node_modules/
-/coverage/
-
-# misc
+node_modules/
+dist/
 .DS_Store
-/dist/
-
-# debug
-npm-debug.log*
-
-.env
-TODO

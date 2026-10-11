@@ -1,182 +1,143 @@
-# tzdb [![GitHub license](https://img.shields.io/github/license/vvo/tzdb?style=flat)](https://github.com/vvo/tzdb/blob/main/LICENSE) [![Tests](https://github.com/vvo/tzdb/workflows/CI/badge.svg)](https://github.com/vvo/tzdb/actions) [![npm version](https://badge.fury.io/js/%40vvo%2Ftzdb.svg)](https://www.npmjs.com/package/@vvo/tzdb) [![minizipped size](https://badgen.net/bundlephobia/minzip/@vvo/tzdb@latest)](https://bundlephobia.com/result?p=@vvo/tzdb@latest)
+# tzdb [![npm version](https://badge.fury.io/js/%40vvo%2Ftzdb.svg)](https://www.npmjs.com/package/@vvo/tzdb)
 
-This is a list and npm package of:
+Time zones for building a time zone picker, always up to date.
 
-- "simplified" [IANA time zones](https://www.iana.org/time-zones) with their alternative names like `Pacific Time` instead of `America/Los_Angeles`, along with major cities for each time zone.
-- all existing raw IANA time zones names
-- "raw" offsets along with current time offsets
-- also includes [deprecated time zone names](https://data.iana.org/time-zones/data/backward) for compatibility
+```js
+import { getTimeZones } from "@vvo/tzdb";
 
-The data and npm packages are **automatically updated** whenever there are changes to https://www.geonames.org/ which is generated from IANA databases.
+getTimeZones().map((timeZone) => timeZone.currentTimeFormat);
+// [..., "-07:00 Pacific Time - Los Angeles, San Diego, San Jose, San Francisco", ...]
+```
 
-This is useful whenever you want to build a time zone select menu in your application.
+- Every [IANA time zone](https://www.iana.org/time-zones), grouped by country and clock, with major
+  cities.
+- Current offsets and abbreviations: PDT in summer, PST in winter.
+- Every current and deprecated IANA name, so saved values always find their entry.
+- Names in any language the browser supports.
+- No dependencies, ESM and CommonJS, TypeScript types, 16 kB gzipped.
 
-## NPM package
+## Always up to date
 
-Installation:
+Every day, a [GitHub workflow](.github/workflows/release.yml) compiles the latest
+[IANA tz database](https://data.iana.org/time-zones/tzdb/), takes city populations from
+[GeoNames](https://www.geonames.org/), tests the result and publishes a new version when something
+changed.
+
+Current offsets come from the browser or Node.js at runtime. A site that never updates this package
+still follows daylight saving changes, and agrees with the offsets `Intl.DateTimeFormat` gives the
+rest of the app.
+
+## Time zone picker
 
 ```bash
 npm add @vvo/tzdb
 ```
 
-Usage:
+```jsx
+import { getTimeZones } from "@vvo/tzdb";
+
+const timeZones = getTimeZones();
+
+// Saved values can be any IANA name, like "Asia/Calcutta" or "US/Pacific"
+function findTimeZone(name) {
+  return timeZones.find((timeZone) => timeZone.group.includes(name));
+}
+
+function TimeZonePicker({ value, onChange }) {
+  const selected = findTimeZone(value ?? Intl.DateTimeFormat().resolvedOptions().timeZone);
+  return (
+    <select value={selected?.name} onChange={(event) => onChange(event.target.value)}>
+      {timeZones.map((timeZone) => (
+        <option key={timeZone.name} value={timeZone.name}>
+          {timeZone.currentTimeFormat}
+        </option>
+      ))}
+    </select>
+  );
+}
+```
+
+Save `name` in the database: every `Intl` API and date library accepts it.
+
+To search, match the query against the fields people type:
 
 ```js
-import { getTimeZones, rawTimeZones, timeZonesNames, abbreviations } from "@vvo/tzdb";
+timeZones.filter((timeZone) =>
+  [timeZone.currentTimeFormat, timeZone.countryName, timeZone.abbreviation, ...timeZone.group]
+    .join(" ")
+    .toLowerCase()
+    .includes(query.toLowerCase()),
+);
 ```
 
 ## API
 
-### getTimeZones()
-
 ```js
-const timeZones = getTimeZones();
-
-// You can also provide an optional parameter to include UTC in the result.
-// This adds a time zone with the name "UTC" and a fixed offset of 0.
-const timeZonesWithUtc = getTimeZones({ includeUtc: true });
+import { getTimeZones, rawTimeZones, timeZonesNames, abbreviations, tzdbVersion } from "@vvo/tzdb";
 ```
 
-This method returns an array of time zones objects:
+### getTimeZones(options)
 
-```js
-[
-  // ...
-  {
-    name: "America/Los_Angeles",
-    alternativeName: "Pacific Time",
-    group: ["America/Los_Angeles"],
-    continentCode: "NA",
-    continentName: "North America",
-    countryName: "United States",
-    countryCode: "US",
-    mainCities: ["Los Angeles", "San Diego", "San Jose", "San Francisco"],
-    rawOffsetInMinutes: -480,
-    abbreviation: "PST",
-    rawFormat: "-08:00 Pacific Time - Los Angeles, San Diego, San Jose, San Francisco",
-    currentTimeOffsetInMinutes: -420, // "current" time zone offset, this is why getTimeZones() is a method and not just an object: it works at runtime
-    currentTimeFormat: "-07:00 Pacific Time - Los Angeles, San Diego",
-  },
-  // ...
-];
-```
-
-When relevant, time zones are grouped. The rules for grouping are:
-
-- if the time zones are in the same country
-- if the DST or summer time offsets are the same
-- if the non-DST, non-summer time offsets are the same
-- then we group the time zones
-- the "main" time zone name (`name` attribute), is always the one from the most populated city
-
-Here's a grouping example:
+Returns time zones sorted by current offset:
 
 ```js
 {
-  name: "America/Dawson_Creek",
-  alternativeName: "Mountain Time",
-  group: ["America/Creston", "America/Dawson_Creek", "America/Fort_Nelson"],
+  name: "America/Los_Angeles",
+  alternativeName: "Pacific Time",
+  group: ["America/Los_Angeles", "US/Pacific", "PST8PDT"],
   continentCode: "NA",
   continentName: "North America",
-  countryName: "Canada",
-  countryCode: "CA",
-  mainCities: ["Fort St. John", "Creston", "Fort Nelson"],
-  rawOffsetInMinutes: -420,
-  abbreviation: "MST",
-  rawFormat: "-07:00 Mountain Time - Fort St. John, Creston, Fort Nelson",
+  countryName: "United States",
+  countryCode: "US",
+  mainCities: ["Los Angeles", "San Diego", "San Jose", "San Francisco"],
+  rawOffsetInMinutes: -480,
+  abbreviation: "PST",
+  dstAbbreviation: "PDT", // only for zones with daylight saving time
+  rawFormat: "-08:00 Pacific Time - Los Angeles, San Diego, San Jose, San Francisco",
   currentTimeOffsetInMinutes: -420,
-  currentTimeFormat: "-07:00 Mountain Time - Fort St. John, Creston"
+  currentTimeFormat: "-07:00 Pacific Time - Los Angeles, San Diego, San Jose, San Francisco",
+  currentAbbreviation: "PDT",
 }
 ```
 
+Options:
+
+- `locale`: translates `alternativeName`, `countryName` and `continentName`. With `"fr"`, Los Angeles
+  shows as "-07:00 heure du Pacifique nord-américain - Los Angeles, ...". City names stay as they are.
+- `includeUtc`: adds `Etc/UTC`, whose group includes `UTC` and `GMT`.
+- `includeGmtOffsets`: adds the fixed offsets `Etc/GMT-14` to `Etc/GMT+12`. As in POSIX, the sign
+  is inverted: `Etc/GMT+5` is 5 hours behind UTC.
+
+Zones the browser does not know yet are left out, since `Intl` could not format dates in them.
+Runtimes without `Intl` time zone support get every zone at its standard offset.
+
 ### rawTimeZones
 
-This is an array of time zone objects without the current time information:
-
-```js
-[
-  // ...
-  {
-    name: "America/Los_Angeles",
-    alternativeName: "Pacific Time",
-    group: ["America/Los_Angeles"],
-    continentCode: "NA",
-    continentName: "North America",
-    countryName: "United States",
-    countryCode: "US",
-    mainCities: ["Los Angeles", "San Diego", "San Jose", "San Francisco"],
-    rawOffsetInMinutes: -480,
-    abbreviation: "PST",
-    rawFormat: "-08:00 Pacific Time - Los Angeles, San Diego, San Jose, San Francisco",
-  },
-  // ...
-];
-```
+The same list without the `current*` fields, sorted by standard offset.
 
 ### timeZonesNames
 
-This is an array of time zone names:
-
-```js
-[
-  // ...
-  "America/Juneau",
-  "America/Kentucky/Louisville",
-  "America/Kentucky/Monticello",
-  "America/Kralendijk",
-  "America/La_Paz",
-  "America/Lima",
-  "America/Los_Angeles",
-  "America/Lower_Princes",
-  "America/Maceio",
-  "America/Managua",
-  "America/Manaus",
-  "America/Marigot",
-  "America/Martinique",
-  "America/Matamoros",
-  // ...
-];
-```
+Every IANA time zone name from [zone.tab](https://data.iana.org/time-zones/tzdb/zone.tab).
 
 ### abbreviations
 
-This is an object mapping timezone abbreviations to their full forms:
+Long names mapped to abbreviations, like `"Central European Summer Time": "CEST"`. Careful, CST
+means Central Standard Time (-06:00), China Standard Time (+08:00) and Cuba Standard Time (-05:00).
 
-```js
-{
-  // ...
-  "Australian Central Daylight Time": "ACDT",
-  "Australian Central Standard Time": "ACST",
-  "Australian Central Time": "ACT",
-  "Australian Central Western Standard Time": "ACWST",
-  "Australian Eastern Daylight Time": "AEDT",
-  "Australian Eastern Standard Time": "AEST",
-  "Australian Eastern Time": "AET",
-  "Australian Western Daylight Time": "AWDT",
-  "Australian Western Standard Time": "AWST",
-  "Azerbaijan Summer Time": "AZST",
-  "Azerbaijan Time": "AZT",
-  "Azores Summer Time": "AZOST",
-  "Azores Time": "AZOT",
-  "Bangladesh Standard Time": "BST",
-  "Bhutan Time": "BTT",
-  "Bolivia Time": "BOT",
-  // ...
-};
-```
+### tzdbVersion
 
-**Caution:** Although abbreviations can be easy to lookup, they can be misleading. For example: CST can refer to Central Standard Time (-06.00 UTC), China Standard Time (+06.00 UTC) or Cuba Standard Time (-05.00 UTC). And abbreviation full forms don't directly map to any property in the time zone objects returned by `rawTimeZones` or `getTimeZones()`.
+The IANA tz database release behind the data, like `"2026e"`.
 
-## Notes
+## How time zones are grouped
 
-- We provide two cities when grouping happens, ranked by population
-- We provide alternative names ("Pacific Time" for "America/Los_Angeles") and remove "Standard", "Daylight" or "Summer" from them
-- If you're using this to build a time zone selector and saving to a database then:
-  - make sure to save the `name` attribute (`America/Los_Angeles`) in your database
-  - when displaying the select with a default value from your database, either select the time zone name that matches, or if the time zone name is part of the group. Example:
+Zones share an entry when they are in the same country and their clocks show the same time for the
+next two years. Detroit and New York had different rules a century ago, so IANA keeps both, but
+they share an entry today.
 
-```js
-const value = timeZones.find((timeZone) => {
-  return dbData.timeZone === timeZone.name || timeZone.group.includes(dbData.timeZone);
-});
-```
+`alternativeName` is the English name from [CLDR](https://cldr.unicode.org/) without "Standard",
+"Daylight" or "Summer". When summer and winter names differ, like "Greenwich Mean Time" and "British
+Summer Time", it is CLDR's generic name, "United Kingdom Time". Several countries share names like
+"Eastern Time", so show `countryName` or `mainCities` next to it.
+
+Abbreviations come from IANA. When IANA has none, like "+03", they come from `abbreviations` or
+read "GMT+3".
