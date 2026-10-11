@@ -8,13 +8,18 @@
     "allowImportingTsExtensions": true,
     "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true,
-    "strict": true,
+    "isolatedDeclarations": true,
+    "declaration": true,
     "noEmit": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "skipLibCheck": true,
     "types": ["node"],
     "paths": {
       "@vvo/tzdb": ["./src/index.ts"]
     }
   },
-  "include": ["src", "scripts", "test"]
+  "include": ["src", "scripts", "test", "tsdown.config.ts"]
 }

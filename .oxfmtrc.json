@@ -1,0 +1,4 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": ["raw-time-zones.json", "time-zones-names.json", "pnpm-lock.yaml"]
+}

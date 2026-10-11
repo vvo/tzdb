@@ -2,7 +2,7 @@
 // smaller once gzipped. Derived fields like rawFormat are rebuilt on load.
 
 import { formatTimeZone } from "./format.ts";
-import type { RawTimeZone } from "./index.ts";
+import type { RawTimeZone } from "./types.ts";
 
 type Row = [
   name: string,
@@ -22,9 +22,7 @@ export type CompactTimeZones = {
   rows: Row[];
 };
 
-export function compactTimeZones(
-  rawTimeZones: RawTimeZone[],
-): CompactTimeZones {
+export function compactTimeZones(rawTimeZones: RawTimeZone[]): CompactTimeZones {
   const continents: Record<string, string> = {};
   const countries: Record<string, string> = {};
   const rows = rawTimeZones.map((timeZone): Row => {
@@ -54,11 +52,7 @@ export function compactTimeZones(
   return { continents, countries, rows };
 }
 
-export function expandTimeZones({
-  continents,
-  countries,
-  rows,
-}: CompactTimeZones): RawTimeZone[] {
+export function expandTimeZones({ continents, countries, rows }: CompactTimeZones): RawTimeZone[] {
   return rows.map(
     ([
       name,
@@ -84,11 +78,7 @@ export function expandTimeZones({
         rawOffsetInMinutes,
         abbreviation,
         ...(dstAbbreviation && { dstAbbreviation }),
-        rawFormat: formatTimeZone(
-          rawOffsetInMinutes,
-          alternativeName,
-          mainCities,
-        ),
+        rawFormat: formatTimeZone(rawOffsetInMinutes, alternativeName, mainCities),
       };
     },
   );

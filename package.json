@@ -3,22 +3,31 @@
   "version": "0.0.0-development",
   "description": "Always up to date list of time zones, with grouping and major cities",
   "keywords": [
-    "timezones",
-    "time zones",
-    "time zone",
-    "timezones list",
-    "time zones list",
     "IANA time zones",
-    "geonames"
+    "geonames",
+    "time zone",
+    "time zones",
+    "time zones list",
+    "timezones",
+    "timezones list"
   ],
+  "license": "MIT",
+  "author": "Vincent Voyer <vincent@codeagain.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vvo/tzdb.git"
   },
-  "license": "MIT",
-  "author": "Vincent Voyer <vincent@codeagain.com>",
-  "sideEffects": false,
+  "files": [
+    "dist/",
+    "abbreviations.json",
+    "raw-time-zones.json",
+    "time-zones-names.json"
+  ],
   "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
@@ -35,33 +44,29 @@
     "./time-zones-names.json": "./time-zones-names.json",
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist/",
-    "abbreviations.json",
-    "raw-time-zones.json",
-    "time-zones-names.json"
-  ],
-  "scripts": {
-    "build": "node scripts/build.ts",
-    "format": "prettier --write .",
-    "generate": "node scripts/generate.ts",
-    "lint": "prettier --check . && tsc",
-    "prepublishOnly": "npm run build",
-    "test": "node scripts/build.ts && node --test 'test/**/*.test.ts'"
+  "publishConfig": {
+    "access": "public"
   },
-  "prettier": {
-    "trailingComma": "all",
-    "overrides": [
-      {
-        "files": "*.md",
-        "options": {
-          "printWidth": 100
-        }
-      }
-    ]
+  "scripts": {
+    "build": "tsdown",
+    "format": "oxfmt",
+    "generate": "node scripts/generate.ts",
+    "lint": "oxfmt --check && oxlint --type-aware && tsc",
+    "prepublishOnly": "npm run build",
+    "test": "tsdown && node --test \"test/**/*.test.ts\" && publint && attw --pack . && size-limit"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
+    "@size-limit/preset-small-lib": "14.1.0",
+    "@types/node": "26.6.4",
+    "oxfmt": "0.71.0",
+    "oxlint": "1.86.0",
+    "oxlint-tsgolint": "7.0.2003",
+    "publint": "0.3.25",
+    "semantic-release": "25.0.9",
+    "size-limit": "14.1.0",
+    "tsdown": "0.23.0",
+    "typescript": "7.0.2"
   },
   "release": {
     "branches": [
@@ -69,15 +74,21 @@
       "next"
     ]
   },
-  "devDependencies": {
-    "@types/node": "26.6.4",
-    "esbuild": "0.28.2",
-    "prettier": "3.9.9",
-    "semantic-release": "25.0.9",
-    "typescript": "7.0.2"
-  },
-  "packageManager": "pnpm@12.11.2",
-  "publishConfig": {
-    "access": "public"
-  }
+  "size-limit": [
+    {
+      "name": "getTimeZones",
+      "path": "dist/index.js",
+      "import": "{ getTimeZones }",
+      "limit": "17 kB",
+      "gzip": true
+    },
+    {
+      "name": "timeZonesNames",
+      "path": "dist/index.js",
+      "import": "{ timeZonesNames }",
+      "limit": "3 kB",
+      "gzip": true
+    }
+  ],
+  "packageManager": "pnpm@12.11.2"
 }

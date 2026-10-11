@@ -6,13 +6,7 @@
 // Node.js Intl (CLDR) is only used for English display names like "Pacific Time".
 
 import { execFileSync } from "node:child_process";
-import {
-  existsSync,
-  mkdirSync,
-  mkdtempSync,
-  readFileSync,
-  writeFileSync,
-} from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -21,8 +15,7 @@ import { formatTimeZone } from "../src/format.ts";
 
 const root = path.join(import.meta.dirname, "..");
 // Set TZDB_WORK_DIR to reuse downloads between runs while developing.
-const workDir =
-  process.env.TZDB_WORK_DIR ?? mkdtempSync(path.join(tmpdir(), "tzdb-"));
+const workDir = process.env.TZDB_WORK_DIR ?? mkdtempSync(path.join(tmpdir(), "tzdb-"));
 mkdirSync(workDir, { recursive: true });
 
 const IANA_DATA_FILES = [
@@ -92,16 +85,18 @@ async function compileIana() {
   const zoneinfoDir = path.join(workDir, "zoneinfo");
   mkdirSync(dataDir, { recursive: true });
 
-  const versions = [];
-  for (const kind of ["data", "code"]) {
-    const archive = await download(
-      `https://data.iana.org/time-zones/tz${kind}-latest.tar.gz`,
-      `tz${kind}-latest.tar.gz`,
-    );
-    versions.push(run("tar", ["-xzOf", archive, "version"]).trim());
+  const archives = await Promise.all(
+    ["data", "code"].map((kind) =>
+      download(
+        `https://data.iana.org/time-zones/tz${kind}-latest.tar.gz`,
+        `tz${kind}-latest.tar.gz`,
+      ),
+    ),
+  );
+  const [version, codeVersion] = archives.map((archive) => {
     run("tar", ["-xzf", archive, "-C", dataDir]);
-  }
-  const [version, codeVersion] = versions;
+    return run("tar", ["-xzOf", archive, "version"]).trim();
+  });
   if (!/^\d{4}[a-z]$/.test(version) || version !== codeVersion) {
     throw new Error(`Unexpected tzdata ${version} / tzcode ${codeVersion}`);
   }
@@ -110,11 +105,7 @@ async function compileIana() {
   // that ships with the release. "-b fat" writes explicit transitions until
   // 2037 so we never have to evaluate POSIX TZ rules ourselves.
   run("make", ["-s", "zic"], dataDir);
-  run(
-    path.join(dataDir, "zic"),
-    ["-b", "fat", "-d", zoneinfoDir, ...IANA_DATA_FILES],
-    dataDir,
-  );
+  run(path.join(dataDir, "zic"), ["-b", "fat", "-d", zoneinfoDir, ...IANA_DATA_FILES], dataDir);
 
   const read = (file: string) => readFileSync(path.join(dataDir, file), "utf8");
 
@@ -144,8 +135,7 @@ async function compileIana() {
     zoneTab,
     links,
     hasZone: (name: string) => existsSync(path.join(zoneinfoDir, name)),
-    readZone: (name: string) =>
-      parseTzif(readFileSync(path.join(zoneinfoDir, name))),
+    readZone: (name: string) => parseTzif(readFileSync(path.join(zoneinfoDir, name))),
   };
 }
 
@@ -165,15 +155,8 @@ function parseTzif(buffer: Buffer): Zone {
   }
   const counts = (at: number) =>
     [0, 1, 2, 3, 4, 5].map((i) => buffer.readUInt32BE(at + 20 + i * 4));
-  const [isUtCount, isStdCount, leapCount, timeCount, typeCount, charCount] =
-    counts(0);
-  const v1Size =
-    timeCount * 5 +
-    typeCount * 6 +
-    charCount +
-    leapCount * 8 +
-    isStdCount +
-    isUtCount;
+  const [isUtCount, isStdCount, leapCount, timeCount, typeCount, charCount] = counts(0);
+  const v1Size = timeCount * 5 + typeCount * 6 + charCount + leapCount * 8 + isStdCount + isUtCount;
   const header = 44 + v1Size;
   const [, , , timeCount2, typeCount2, charCount2] = counts(header);
   let cursor = header + 44;
@@ -198,10 +181,7 @@ function parseTzif(buffer: Buffer): Zone {
   const types = rawTypes.map(({ offset, isDst, abbreviationIndex }) => ({
     offset,
     isDst,
-    abbreviation: chars.slice(
-      abbreviationIndex,
-      chars.indexOf("\0", abbreviationIndex),
-    ),
+    abbreviation: chars.slice(abbreviationIndex, chars.indexOf("\0", abbreviationIndex)),
   }));
 
   const footer = buffer.toString(
@@ -218,9 +198,7 @@ function parseTzif(buffer: Buffer): Zone {
 function timeTypesBetween(zone: Zone, from: number, to: number) {
   const { transitions, types, typeIndexes } = zone;
   let index = transitions.findLastIndex((time) => time <= from);
-  const result = [
-    { time: from, ...types[index === -1 ? 0 : typeIndexes[index]] },
-  ];
+  const result = [{ time: from, ...types[index === -1 ? 0 : typeIndexes[index]] }];
   for (index += 1; index < transitions.length; index++) {
     if (transitions[index] > to) {
       return result;
@@ -274,10 +252,7 @@ async function readGeonames() {
     })
     // Districts like Favoriten in Vienna, and historical, abandoned or
     // destroyed places. https://www.geonames.org/export/codes.html
-    .filter(
-      ({ featureCode }) =>
-        !["PPLX", "PPLH", "PPLQ", "PPLW"].includes(featureCode),
-    );
+    .filter(({ featureCode }) => !["PPLX", "PPLH", "PPLQ", "PPLW"].includes(featureCode));
 
   return { countries, cities };
 }
@@ -302,20 +277,16 @@ function intlOffset(timeZone: string, date: Date): number {
   return match[1] === "-" ? -minutes : minutes;
 }
 
-const genericName = (name: string) =>
-  name.replace(/ (Standard|Daylight|Summer) Time$/, " Time");
+const genericName = (name: string) => name.replace(/ (Standard|Daylight|Summer) Time$/, " Time");
 
 const isGmtOffset = (name: string) => /^GMT([+-]\d{2}:\d{2})?$/.test(name);
 
 function displayNames(timeZone: string) {
   const year = new Date().getUTCFullYear();
-  const samples = [
-    new Date(Date.UTC(year, 0, 15)),
-    new Date(Date.UTC(year, 6, 15)),
-  ].sort((a, b) => intlOffset(timeZone, a) - intlOffset(timeZone, b));
-  const [standard, daylight] = samples.map((date) =>
-    longName(timeZone, date, "long"),
+  const samples = [new Date(Date.UTC(year, 0, 15)), new Date(Date.UTC(year, 6, 15))].toSorted(
+    (a, b) => intlOffset(timeZone, a) - intlOffset(timeZone, b),
   );
+  const [standard, daylight] = samples.map((date) => longName(timeZone, date, "long"));
   return {
     standard,
     daylight,
@@ -323,10 +294,7 @@ function displayNames(timeZone: string) {
   };
 }
 
-function alternativeName(
-  timeZone: string,
-  names: ReturnType<typeof displayNames>,
-) {
+function alternativeName(timeZone: string, names: ReturnType<typeof displayNames>) {
   if (alternativeNameCorrections[timeZone]) {
     return alternativeNameCorrections[timeZone];
   }
@@ -384,10 +352,7 @@ function signatureOf(name: string): string {
   if (!signatures.has(name)) {
     const upcoming = timeTypesBetween(iana.readZone(name), now, now + 2 * YEAR);
     const signature = upcoming
-      .filter(
-        ({ offset }, index) =>
-          index === 0 || offset !== upcoming[index - 1].offset,
-      )
+      .filter(({ offset }, index) => index === 0 || offset !== upcoming[index - 1].offset)
       .map(({ time, offset }) => `${time === now ? "now" : time}:${offset}`)
       .join(",");
     signatures.set(name, signature);
@@ -399,17 +364,14 @@ const zones = iana.zoneTab.map(({ countryCode, name }) => {
   const nextYear = timeTypesBetween(iana.readZone(name), now, now + YEAR);
   const rawOffsetInMinutes = Math.min(...nextYear.map(({ offset }) => offset));
 
-  const standardTypes = nextYear.filter(
-    ({ offset }) => offset === rawOffsetInMinutes,
-  );
+  const standardTypes = nextYear.filter(({ offset }) => offset === rawOffsetInMinutes);
 
   return {
     countryCode,
     name,
     rawOffsetInMinutes,
     // Vancouver is on PDT until it switches to permanent MST, both at -07:00
-    standardType:
-      standardTypes.find(({ isDst }) => !isDst) ?? standardTypes.at(-1)!,
+    standardType: standardTypes.find(({ isDst }) => !isDst) ?? standardTypes.at(-1)!,
     daylightType: nextYear.find(({ offset }) => offset > rawOffsetInMinutes),
     signature: signatureOf(name),
     cities: [] as { name: string; population: number }[],
@@ -423,19 +385,13 @@ const zonesByCountryAndName = new Map(
 // Geonames sometimes uses another country's zone, like Asia/Bangkok for
 // Hanoi. We then pick the zone of the city's country with the same clock.
 function zoneOfCity(city: (typeof cities)[number]) {
-  const exact = zonesByCountryAndName.get(
-    `${city.countryCode}|${city.timeZone}`,
-  );
+  const exact = zonesByCountryAndName.get(`${city.countryCode}|${city.timeZone}`);
   if (exact || !iana.hasZone(city.timeZone)) {
     return exact;
   }
   const target = resolveLink(city.timeZone);
-  const countryZones = zones.filter(
-    ({ countryCode }) => countryCode === city.countryCode,
-  );
-  const sameZone = countryZones.filter(
-    ({ name }) => resolveLink(name) === target,
-  );
+  const countryZones = zones.filter(({ countryCode }) => countryCode === city.countryCode);
+  const sameZone = countryZones.filter(({ name }) => resolveLink(name) === target);
   if (sameZone.length === 1) {
     return sameZone[0];
   }
@@ -479,7 +435,7 @@ for (const zone of zones) {
 // Each time zone name belongs to exactly one group
 const groupOfZone = new Map<string, string[]>();
 for (const members of groups.values()) {
-  const names = members.map(({ name }) => name).sort();
+  const names = members.map(({ name }) => name).toSorted();
   for (const name of names) {
     groupOfZone.set(name, names);
   }
@@ -487,7 +443,7 @@ for (const members of groups.values()) {
 
 // A link joins the group of the zone.tab entry it points to
 const unassignedLinks = [];
-for (const link of [...iana.links.keys()].sort()) {
+for (const link of [...iana.links.keys()].toSorted()) {
   if (zoneTabNames.has(link)) {
     continue;
   }
@@ -519,9 +475,9 @@ for (const [name, target] of Object.entries(usRulesZones)) {
 
 const rawTimeZones = [...groups.values()].map((members) => {
   const allCities = members
-    .flatMap(({ cities }) => cities)
-    .sort((a, b) => b.population - a.population);
-  const main = members.find(({ cities }) => cities.includes(allCities[0]))!;
+    .flatMap((zone) => zone.cities)
+    .toSorted((a, b) => b.population - a.population);
+  const main = members.find((zone) => zone.cities.includes(allCities[0]))!;
   const country = countries.get(main.countryCode);
   if (country === undefined || continents[country.continent] === undefined) {
     throw new Error(`Unknown country ${main.countryCode}`);
@@ -529,7 +485,7 @@ const rawTimeZones = [...groups.values()].map((members) => {
 
   const names = displayNames(main.name);
   const name = alternativeName(main.name, names);
-  const mainCities = allCities.slice(0, 4).map(({ name }) => name);
+  const mainCities = allCities.slice(0, 4).map((city) => city.name);
   const { standardType, daylightType } = main;
 
   // IANA only keeps abbreviations in actual use, others look like "+03"
@@ -543,8 +499,7 @@ const rawTimeZones = [...groups.values()].map((members) => {
     daylightType &&
     (isAlphabetic(daylightType.abbreviation)
       ? daylightType.abbreviation
-      : (names.daylight !== names.standard &&
-          cldrAbbreviation(names.daylight)) ||
+      : (names.daylight !== names.standard && cldrAbbreviation(names.daylight)) ||
         gmtAbbreviation(daylightType.offset));
 
   return {
@@ -571,18 +526,10 @@ rawTimeZones.sort(
 );
 
 const expectedUnassignedLinks = new Set([
-  ...["GMT", "GMT+0", "GMT-0", "GMT0", "Greenwich"].flatMap((name) => [
-    name,
-    `Etc/${name}`,
-  ]),
-  ...["UCT", "UTC", "Universal", "Zulu"].flatMap((name) => [
-    name,
-    `Etc/${name}`,
-  ]),
+  ...["GMT", "GMT+0", "GMT-0", "GMT0", "Greenwich"].flatMap((name) => [name, `Etc/${name}`]),
+  ...["UCT", "UTC", "Universal", "Zulu"].flatMap((name) => [name, `Etc/${name}`]),
 ]);
-const unexpectedLinks = unassignedLinks.filter(
-  (link) => !expectedUnassignedLinks.has(link),
-);
+const unexpectedLinks = unassignedLinks.filter((link) => !expectedUnassignedLinks.has(link));
 if (unexpectedLinks.length > 0) {
   throw new Error(`Links without a time zone: ${unexpectedLinks.join(", ")}`);
 }
@@ -593,7 +540,7 @@ writeFileSync(
 );
 writeFileSync(
   path.join(root, "time-zones-names.json"),
-  `${JSON.stringify([...zoneTabNames].sort()).replace(/",/g, '",\n')}\n`,
+  `${JSON.stringify([...zoneTabNames].toSorted()).replace(/",/g, '",\n')}\n`,
 );
 writeFileSync(
   path.join(root, "src", "tzdb-version.ts"),
