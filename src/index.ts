@@ -1,7 +1,7 @@
 import abbreviationsData from "../abbreviations.json" with { type: "json" };
 import rawTimeZonesData from "../raw-time-zones.json" with { type: "json" };
 import timeZonesNamesData from "../time-zones-names.json" with { type: "json" };
-import { formatTimeZone } from "./format.ts";
+import { formatOffset, formatTimeZone } from "./format.ts";
 import { tzdbVersion as version } from "./tzdb-version.ts";
 
 export type TimeZoneName = string;
@@ -37,8 +37,13 @@ export interface TimeZone extends RawTimeZone {
 }
 
 export interface TimeZoneOptions {
-  /** Adds an "Etc/UTC" time zone */
+  /** Adds an "Etc/UTC" time zone, whose group includes "UTC" and "GMT" */
   includeUtc?: boolean;
+  /**
+   * Adds the fixed offset time zones from "Etc/GMT-14" to "Etc/GMT+12".
+   * Their sign is inverted: "Etc/GMT+5" is 5 hours behind UTC.
+   */
+  includeGmtOffsets?: boolean;
   /**
    * Translates alternativeName, countryName and continentName with the Intl
    * API, like "fr" or "es-MX". City names are not translated.
@@ -145,7 +150,7 @@ function translator(locale: string, date: Date) {
  * and operating systems keep up to date.
  */
 export function getTimeZones(options: TimeZoneOptions = {}): TimeZone[] {
-  const { includeUtc = false, locale } = options;
+  const { includeUtc = false, includeGmtOffsets = false, locale } = options;
   const now = new Date();
   const translate = locale ? translator(locale, now) : undefined;
 
@@ -201,35 +206,74 @@ export function getTimeZones(options: TimeZoneOptions = {}): TimeZone[] {
     });
   });
 
-  if (includeUtc) {
-    const name = translate
-      ? `${translate.timeZone("UTC", "Coordinated Universal Time")} (UTC)`
-      : "Coordinated Universal Time (UTC)";
+  const fixed = (
+    name: string,
+    group: TimeZoneName[],
+    offset: number,
+    alternativeName: string,
+    abbreviation: string,
+  ) => {
+    const format = `${formatOffset(offset)} ${alternativeName}`;
     timeZones.push({
-      name: "Etc/UTC",
-      alternativeName: name,
-      group: [
-        "Etc/UTC",
-        "Etc/UCT",
-        "Etc/Universal",
-        "Etc/Zulu",
-        "UCT",
-        "UTC",
-        "Universal",
-        "Zulu",
-      ],
+      name,
+      alternativeName,
+      group,
       continentCode: "",
       continentName: "",
       countryName: "",
       countryCode: "",
       mainCities: [""],
-      rawOffsetInMinutes: 0,
-      abbreviation: "UTC",
-      rawFormat: `+00:00 ${name}`,
-      currentTimeOffsetInMinutes: 0,
-      currentTimeFormat: `+00:00 ${name}`,
-      currentAbbreviation: "UTC",
+      rawOffsetInMinutes: offset,
+      abbreviation,
+      rawFormat: format,
+      currentTimeOffsetInMinutes: offset,
+      currentTimeFormat: format,
+      currentAbbreviation: abbreviation,
     });
+  };
+
+  if (includeUtc) {
+    const name = translate
+      ? `${translate.timeZone("UTC", "Coordinated Universal Time")} (UTC)`
+      : "Coordinated Universal Time (UTC)";
+    const group = [
+      "Etc/UTC",
+      "Etc/UCT",
+      "Etc/Universal",
+      "Etc/Zulu",
+      "UCT",
+      "UTC",
+      "Universal",
+      "Zulu",
+      "Etc/GMT",
+      "Etc/GMT+0",
+      "Etc/GMT-0",
+      "Etc/GMT0",
+      "Etc/Greenwich",
+      "GMT",
+      "GMT+0",
+      "GMT-0",
+      "GMT0",
+      "Greenwich",
+    ];
+    fixed("Etc/UTC", group, 0, name, "UTC");
+  }
+
+  if (includeGmtOffsets) {
+    for (let hours = -12; hours <= 14; hours++) {
+      if (hours !== 0) {
+        const sign = hours > 0 ? "+" : "-";
+        const name = `Etc/GMT${hours > 0 ? "-" : "+"}${Math.abs(hours)}`;
+        const fallback = `GMT${formatOffset(hours * 60)}`;
+        fixed(
+          name,
+          [name],
+          hours * 60,
+          translate ? translate.timeZone(name, fallback) : fallback,
+          `GMT${sign}${Math.abs(hours)}`,
+        );
+      }
+    }
   }
 
   return timeZones.sort(
