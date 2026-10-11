@@ -266,11 +266,18 @@ async function readGeonames() {
       }
       return {
         name: fields[1],
+        featureCode: fields[7],
         countryCode: fields[8],
         population: Number(fields[14]),
         timeZone: fields[17],
       };
-    });
+    })
+    // Districts like Favoriten in Vienna, and historical, abandoned or
+    // destroyed places. https://www.geonames.org/export/codes.html
+    .filter(
+      ({ featureCode }) =>
+        !["PPLX", "PPLH", "PPLQ", "PPLW"].includes(featureCode),
+    );
 
   return { countries, cities };
 }
