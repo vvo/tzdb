@@ -1,16 +1,14 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
-import test, { type TestContext } from "node:test";
+import test from "node:test";
 
 import * as esm from "@vvo/tzdb";
 
 const cjs: typeof esm = createRequire(import.meta.url)("@vvo/tzdb");
 
-function getTimeZonesAt(t: TestContext, date: string) {
-  t.mock.timers.enable({ apis: ["Date"], now: new Date(date) });
-  const timeZones = esm.getTimeZones();
-  t.mock.timers.reset();
+function getTimeZonesAt(date: string) {
+  const timeZones = esm.getTimeZones({ date: new Date(date) });
   return new Map(timeZones.map((timeZone) => [timeZone.name, timeZone]));
 }
 
@@ -32,9 +30,9 @@ test("both builds expose raw-time-zones.json as rawTimeZones", () => {
   assert.deepEqual(cjs.rawTimeZones, json);
 });
 
-test("current offsets and abbreviations follow daylight saving time", (t) => {
-  const january = getTimeZonesAt(t, "2026-01-15T12:00Z");
-  const july = getTimeZonesAt(t, "2026-07-15T12:00Z");
+test("current offsets and abbreviations follow daylight saving time", () => {
+  const january = getTimeZonesAt("2026-01-15T12:00Z");
+  const july = getTimeZonesAt("2026-07-15T12:00Z");
 
   const offsets = [...july.values()].map((tz) => tz.currentTimeOffsetInMinutes);
   assert.deepEqual(

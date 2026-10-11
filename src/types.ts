@@ -43,4 +43,6 @@ export interface TimeZoneOptions {
    * API, like "fr" or "es-MX". City names are not translated.
    */
   locale?: string;
+  /** Computes the current* fields at this date instead of now, like the date of a meeting */
+  date?: Date;
 }
