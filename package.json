@@ -1,15 +1,27 @@
 {
   "name": "@vvo/tzdb",
   "version": "0.0.0-development",
-  "description": "Always up to date list of time zones, with grouping and major cities",
+  "description": "Always up to date list of IANA time zones for time zone pickers, with major cities, current offsets, DST abbreviations and the country of any time zone",
   "keywords": [
-    "IANA time zones",
+    "abbreviations",
+    "countries",
+    "country",
+    "country from timezone",
+    "dst",
     "geonames",
+    "iana",
     "time zone",
+    "time zone list",
     "time zones",
-    "time zones list",
+    "timezone",
+    "timezone dropdown",
+    "timezone list",
+    "timezone picker",
+    "timezone select",
     "timezones",
-    "timezones list"
+    "tz database",
+    "tzdb",
+    "utc offset"
   ],
   "license": "MIT",
   "author": "Vincent Voyer <vincent@codeagain.com>",
@@ -80,6 +92,13 @@
       "path": "dist/index.js",
       "import": "{ getTimeZones }",
       "limit": "17 kB",
+      "gzip": true
+    },
+    {
+      "name": "getCountryCode",
+      "path": "dist/index.js",
+      "import": "{ getCountryCode }",
+      "limit": "4.5 kB",
       "gzip": true
     },
     {
