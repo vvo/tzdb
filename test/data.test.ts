@@ -5,7 +5,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { rawTimeZones, timeZonesNames, tzdbVersion } from "@vvo/tzdb";
+import { getCountryCode, rawTimeZones, timeZonesNames, tzdbVersion } from "@vvo/tzdb";
 
 test("every time zone name belongs to exactly one group", () => {
   const groupOf = new Map<string, string>();
@@ -38,4 +38,14 @@ test("offsets and abbreviations come from the IANA tz database", () => {
 
   const withDst = rawTimeZones.filter(({ dstAbbreviation }) => dstAbbreviation);
   assert.ok(withDst.length > 50, `only ${withDst.length} zones observe DST`);
+});
+
+test("getCountryCode knows the country of every time zone name", () => {
+  for (const { countryCode, group } of rawTimeZones) {
+    for (const name of group) {
+      assert.equal(getCountryCode(name), countryCode, name);
+    }
+  }
+  assert.equal(getCountryCode("Asia/Calcutta"), "IN");
+  assert.equal(getCountryCode("UTC"), undefined);
 });

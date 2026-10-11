@@ -39,7 +39,7 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "feat(data): Automatic data update"
-          file_pattern: raw-time-zones.json time-zones-names.json src/tzdb-version.ts
+          file_pattern: raw-time-zones.json time-zones-names.json src/tzdb-version.ts src/countries.ts
       - run: pnpm exec semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

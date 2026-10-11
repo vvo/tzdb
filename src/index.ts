@@ -1,6 +1,7 @@
 import abbreviationsData from "../abbreviations.json" with { type: "json" };
 import rawTimeZonesData from "../raw-time-zones.json" with { type: "json" };
 import timeZonesNamesData from "../time-zones-names.json" with { type: "json" };
+import { countries } from "./countries.ts";
 import { formatOffset, formatTimeZone } from "./format.ts";
 import { tzdbVersion as version } from "./tzdb-version.ts";
 import type { RawTimeZone, TimeZone, TimeZoneName, TimeZoneOptions } from "./types.ts";
@@ -12,6 +13,25 @@ export const timeZonesNames: TimeZoneName[] = timeZonesNamesData;
 export const abbreviations: Record<string, string> = abbreviationsData;
 /** Release of the IANA tz database used to build the data, like "2026e" */
 export const tzdbVersion: string = version;
+
+let countryCodes: Map<string, string> | undefined;
+
+/**
+ * ISO 3166 country code of any IANA time zone name, current or deprecated,
+ * like "FR" for "Europe/Paris" or "IN" for "Asia/Calcutta". Undefined for
+ * names without a country, like "UTC".
+ */
+export function getCountryCode(timeZone: string): string | undefined {
+  if (countryCodes === undefined) {
+    countryCodes = new Map();
+    for (const code of Object.keys(countries)) {
+      for (const name of countries[code].split(" ")) {
+        countryCodes.set(name, code);
+      }
+    }
+  }
+  return countryCodes.get(timeZone);
+}
 
 const offsetFormats = new Map<string, Intl.DateTimeFormat | null>();
 

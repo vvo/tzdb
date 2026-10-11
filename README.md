@@ -1,6 +1,6 @@
 # tzdb [![npm version](https://badge.fury.io/js/%40vvo%2Ftzdb.svg)](https://www.npmjs.com/package/@vvo/tzdb)
 
-Time zones for building a time zone picker, always up to date.
+Always up to date time zones for time zone pickers, and the country of any time zone.
 
 ```js
 import { getTimeZones } from "@vvo/tzdb";
@@ -14,7 +14,8 @@ getTimeZones().map((timeZone) => timeZone.currentTimeFormat);
 - Current offsets and abbreviations: PDT in summer, PST in winter.
 - Every current and deprecated IANA name, so saved values always find their entry.
 - Names in any language the browser supports.
-- No dependencies, ESM and CommonJS, TypeScript types, 17 kB gzipped.
+- The country of a visitor's time zone, to guess where they are without an IP lookup.
+- No dependencies, ESM and CommonJS, TypeScript types.
 
 ## Always up to date
 
@@ -70,10 +71,30 @@ timeZones.filter((timeZone) =>
 );
 ```
 
+## Country of a visitor
+
+```js
+import { getCountryCode } from "@vvo/tzdb";
+
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // "Europe/Paris"
+getCountryCode(timeZone); // "FR"
+new Intl.DisplayNames(["en"], { type: "region" }).of("FR"); // "France"
+```
+
+It knows every IANA name, including old ones browsers still return, like `Asia/Calcutta`. It weighs
+4 kB and does not load the time zone list.
+
 ## API
 
 ```js
-import { getTimeZones, rawTimeZones, timeZonesNames, abbreviations, tzdbVersion } from "@vvo/tzdb";
+import {
+  getTimeZones,
+  getCountryCode,
+  rawTimeZones,
+  timeZonesNames,
+  abbreviations,
+  tzdbVersion,
+} from "@vvo/tzdb";
 ```
 
 ### getTimeZones(options)
@@ -111,6 +132,11 @@ Options:
 Zones the browser does not know yet are left out, since `Intl` could not format dates in them.
 Runtimes without `Intl` time zone support get every zone at its standard offset.
 
+### getCountryCode(timeZone)
+
+The [ISO 3166](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of an IANA time zone
+name, or `undefined` for names without a country like `UTC`.
+
 ### rawTimeZones
 
 The same list without the `current*` fields, sorted by standard offset.
@@ -127,6 +153,20 @@ means Central Standard Time (-06:00), China Standard Time (+08:00) and Cuba Stan
 ### tzdbVersion
 
 The IANA tz database release behind the data, like `"2026e"`.
+
+## Compared to countries-and-timezones
+
+|                                    | @vvo/tzdb                    | countries-and-timezones             |
+| ---------------------------------- | ---------------------------- | ----------------------------------- |
+| Data updates                       | Every day, automatically     | By hand                             |
+| Current offsets                    | From the browser, at runtime | Computed when the package was built |
+| Grouped list with cities and names | Yes                          | No                                  |
+| Abbreviations that follow DST      | Yes                          | No                                  |
+| Translations                       | Any language the browser has | No                                  |
+| Country of a time zone             | 4 kB                         | 9 kB                                |
+| Everything                         | 17 kB                        | 9 kB                                |
+
+Sizes are minified and gzipped.
 
 ## How time zones are grouped
 
