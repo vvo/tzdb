@@ -1,7 +1,4 @@
-/dist/
-/coverage/
+dist/
 pnpm-lock.yaml
 raw-time-zones.json
 time-zones-names.json
-*.gif
-*.png

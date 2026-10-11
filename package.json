@@ -79,20 +79,5 @@
   "packageManager": "pnpm@12.11.2",
   "publishConfig": {
     "access": "public"
-  },
-  "renovate": {
-    "extends": [
-      "config:js-lib",
-      ":automergePatch",
-      ":automergeBranch",
-      ":automergeLinters",
-      ":automergeTesters",
-      ":automergeTypes"
-    ],
-    "timezone": "Europe/Paris",
-    "schedule": [
-      "before 3am on Monday"
-    ],
-    "groupName": "all"
   }
 }
