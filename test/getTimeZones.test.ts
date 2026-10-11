@@ -22,8 +22,7 @@ function intlOffset(timeZone: string): number {
   })
     .formatToParts()
     .find(({ type }) => type === "timeZoneName")!.value;
-  const [, sign, hours = "0", minutes = "0"] =
-    /^GMT(?:([+-])(\d{2}):(\d{2}))?$/.exec(value)!;
+  const [, sign, hours = "0", minutes = "0"] = /^GMT(?:([+-])(\d{2}):(\d{2}))?$/.exec(value)!;
   return (sign === "-" ? -1 : 1) * (Number(hours) * 60 + Number(minutes));
 }
 
@@ -40,17 +39,12 @@ test("current offsets and abbreviations follow daylight saving time", (t) => {
   const offsets = [...july.values()].map((tz) => tz.currentTimeOffsetInMinutes);
   assert.deepEqual(
     offsets,
-    [...offsets].sort((a, b) => a - b),
+    offsets.toSorted((a, b) => a - b),
   );
 
   let checked = 0;
-  for (const {
-    name,
-    rawOffsetInMinutes,
-    abbreviation,
-    dstAbbreviation,
-  } of esm.rawTimeZones) {
-    const [winter, summer] = [january.get(name)!, july.get(name)!].sort(
+  for (const { name, rawOffsetInMinutes, abbreviation, dstAbbreviation } of esm.rawTimeZones) {
+    const [winter, summer] = [january.get(name)!, july.get(name)!].toSorted(
       (a, b) => a.currentTimeOffsetInMinutes - b.currentTimeOffsetInMinutes,
     );
     // Skip zones whose rules changed since 2026
@@ -86,24 +80,18 @@ test("runtimes without Intl time zone support get standard offsets", async (t) =
     throw new RangeError("Unsupported time zone");
   });
   // A new module instance, so no Intl.DateTimeFormat is cached yet
-  const { getTimeZones, rawTimeZones } = (await import(
-    `${import.meta.resolve("@vvo/tzdb")}?without-intl`
-  )) as typeof esm;
+  const fresh: typeof esm = await import(`${import.meta.resolve("@vvo/tzdb")}?without-intl`);
+  const { getTimeZones, rawTimeZones } = fresh;
 
   const timeZones = getTimeZones();
   assert.equal(timeZones.length, rawTimeZones.length);
   for (const timeZone of timeZones) {
-    assert.equal(
-      timeZone.currentTimeOffsetInMinutes,
-      timeZone.rawOffsetInMinutes,
-    );
+    assert.equal(timeZone.currentTimeOffsetInMinutes, timeZone.rawOffsetInMinutes);
   }
 });
 
 test("locale translates time zone, country and continent names", () => {
-  const berlin = esm
-    .getTimeZones({ locale: "de" })
-    .find(({ name }) => name === "Europe/Berlin")!;
+  const berlin = esm.getTimeZones({ locale: "de" }).find(({ name }) => name === "Europe/Berlin")!;
 
   assert.equal(berlin.countryName, "Deutschland");
   assert.equal(berlin.continentName, "Europa");

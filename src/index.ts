@@ -3,53 +3,9 @@ import rawTimeZonesData from "../raw-time-zones.json" with { type: "json" };
 import timeZonesNamesData from "../time-zones-names.json" with { type: "json" };
 import { formatOffset, formatTimeZone } from "./format.ts";
 import { tzdbVersion as version } from "./tzdb-version.ts";
+import type { RawTimeZone, TimeZone, TimeZoneName, TimeZoneOptions } from "./types.ts";
 
-export type TimeZoneName = string;
-
-export interface RawTimeZone {
-  /** IANA name of the most populated zone of the group, like "America/Los_Angeles" */
-  name: TimeZoneName;
-  /** English generic name, like "Pacific Time" */
-  alternativeName: string;
-  /** Every IANA name, current or deprecated, that shows this exact time */
-  group: TimeZoneName[];
-  continentCode: string;
-  continentName: string;
-  countryName: string;
-  countryCode: string;
-  /** Up to four cities, most populated first */
-  mainCities: string[];
-  /** UTC offset outside of daylight saving time */
-  rawOffsetInMinutes: number;
-  /** Abbreviation outside of daylight saving time, like "PST" */
-  abbreviation: string;
-  /** Abbreviation during daylight saving time, like "PDT". Only for zones that observe it */
-  dstAbbreviation?: string;
-  rawFormat: string;
-}
-
-export interface TimeZone extends RawTimeZone {
-  /** UTC offset right now, according to the tz database of the browser or Node.js */
-  currentTimeOffsetInMinutes: number;
-  currentTimeFormat: string;
-  /** "PDT" or "PST" depending on the current date */
-  currentAbbreviation: string;
-}
-
-export interface TimeZoneOptions {
-  /** Adds an "Etc/UTC" time zone, whose group includes "UTC" and "GMT" */
-  includeUtc?: boolean;
-  /**
-   * Adds the fixed offset time zones from "Etc/GMT-14" to "Etc/GMT+12".
-   * Their sign is inverted: "Etc/GMT+5" is 5 hours behind UTC.
-   */
-  includeGmtOffsets?: boolean;
-  /**
-   * Translates alternativeName, countryName and continentName with the Intl
-   * API, like "fr" or "es-MX". City names are not translated.
-   */
-  locale?: string;
-}
+export type { RawTimeZone, TimeZone, TimeZoneName, TimeZoneOptions };
 
 export const rawTimeZones: RawTimeZone[] = rawTimeZonesData;
 export const timeZonesNames: TimeZoneName[] = timeZonesNamesData;
@@ -172,14 +128,8 @@ export function getTimeZones(options: TimeZoneOptions = {}): TimeZone[] {
 
     const timeZone = { ...rawTimeZone };
     if (translate) {
-      timeZone.alternativeName = translate.timeZone(
-        timeZone.name,
-        timeZone.alternativeName,
-      );
-      timeZone.countryName = translate.region(
-        timeZone.countryCode,
-        timeZone.countryName,
-      );
+      timeZone.alternativeName = translate.timeZone(timeZone.name, timeZone.alternativeName);
+      timeZone.countryName = translate.region(timeZone.countryCode, timeZone.countryName);
       timeZone.continentName = translate.region(
         continentRegions[timeZone.continentCode],
         timeZone.continentName,
@@ -194,11 +144,7 @@ export function getTimeZones(options: TimeZoneOptions = {}): TimeZone[] {
     timeZones.push({
       ...timeZone,
       currentTimeOffsetInMinutes: offset,
-      currentTimeFormat: formatTimeZone(
-        offset,
-        timeZone.alternativeName,
-        timeZone.mainCities,
-      ),
+      currentTimeFormat: formatTimeZone(offset, timeZone.alternativeName, timeZone.mainCities),
       currentAbbreviation:
         offset > timeZone.rawOffsetInMinutes && timeZone.dstAbbreviation
           ? timeZone.dstAbbreviation

@@ -12,11 +12,7 @@ test("every time zone name belongs to exactly one group", () => {
   for (const { name, group } of rawTimeZones) {
     assert.ok(group.includes(name), `${name} is missing from its own group`);
     for (const member of group) {
-      assert.equal(
-        groupOf.get(member),
-        undefined,
-        `${member} is in two groups`,
-      );
+      assert.equal(groupOf.get(member), undefined, `${member} is in two groups`);
       groupOf.set(member, name);
     }
   }

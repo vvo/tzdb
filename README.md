@@ -14,7 +14,7 @@ getTimeZones().map((timeZone) => timeZone.currentTimeFormat);
 - Current offsets and abbreviations: PDT in summer, PST in winter.
 - Every current and deprecated IANA name, so saved values always find their entry.
 - Names in any language the browser supports.
-- No dependencies, ESM and CommonJS, TypeScript types, 16 kB gzipped.
+- No dependencies, ESM and CommonJS, TypeScript types, 17 kB gzipped.
 
 ## Always up to date
 
