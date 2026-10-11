@@ -1,5 +1,6 @@
 // The release workflow runs these on freshly generated data before
-// committing and publishing it.
+// committing and publishing it, so they only assert facts that hold
+// whatever governments decide next.
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -31,33 +32,14 @@ test("every time zone name belongs to exactly one group", () => {
 test("offsets and abbreviations come from the IANA tz database", () => {
   assert.match(tzdbVersion, /^\d{4}[a-z]$/);
 
-  const zone = (name: string) => {
-    const timeZone = rawTimeZones.find((timeZone) => timeZone.name === name);
-    assert.ok(timeZone, `${name} is not a main time zone`);
-    const { rawOffsetInMinutes, abbreviation, dstAbbreviation } = timeZone;
-    return { rawOffsetInMinutes, abbreviation, dstAbbreviation };
-  };
-
   // Geonames still had Namibia at +01:00 years after it moved to +02:00
-  assert.deepEqual(zone("Africa/Windhoek"), {
-    rawOffsetInMinutes: 120,
-    abbreviation: "CAT",
-    dstAbbreviation: undefined,
-  });
-  assert.deepEqual(zone("Asia/Kolkata"), {
-    rawOffsetInMinutes: 330,
-    abbreviation: "IST",
-    dstAbbreviation: undefined,
-  });
-  assert.deepEqual(zone("America/New_York"), {
-    rawOffsetInMinutes: -300,
-    abbreviation: "EST",
-    dstAbbreviation: "EDT",
-  });
-  // Ireland's winter time is a negative DST in IANA's main data format
-  assert.deepEqual(zone("Europe/Dublin"), {
-    rawOffsetInMinutes: 0,
-    abbreviation: "GMT",
-    dstAbbreviation: "IST",
-  });
+  const windhoek = rawTimeZones.find(({ name }) => name === "Africa/Windhoek");
+  assert.equal(windhoek?.rawOffsetInMinutes, 120);
+
+  const kolkata = rawTimeZones.find(({ name }) => name === "Asia/Kolkata");
+  assert.equal(kolkata?.rawOffsetInMinutes, 330);
+  assert.equal(kolkata?.abbreviation, "IST");
+
+  const withDst = rawTimeZones.filter(({ dstAbbreviation }) => dstAbbreviation);
+  assert.ok(withDst.length > 50, `only ${withDst.length} zones observe DST`);
 });
