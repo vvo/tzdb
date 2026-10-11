@@ -1,22 +1,26 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
+
+permissions:
+  contents: read
+
 jobs:
   ci:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
-          run_install: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: '.node-version'
-          cache: 'pnpm'
-      - run: pnpm i
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm test
+      # Make sure the generator still works with the latest IANA and geonames
+      # files, then test what it produced
+      - run: pnpm run generate
       - run: pnpm test

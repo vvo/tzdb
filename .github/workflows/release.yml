@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - next
+  schedule:
+    - cron: "0 14 * * *"
+
+permissions:
+  contents: write # commit data updates, push release tags
+  issues: write # comment on released issues
+  pull-requests: write # comment on released pull requests
+  id-token: write # npm trusted publishing, no NPM_TOKEN needed
+
+concurrency:
+  group: release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run generate
+      # Never commit or publish data that fails the tests
+      - run: pnpm run lint
+      - run: pnpm test
+      - uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "feat(data): Automatic data update"
+          file_pattern: raw-time-zones.json time-zones-names.json src/tzdb-version.ts
+      - run: pnpm exec semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
