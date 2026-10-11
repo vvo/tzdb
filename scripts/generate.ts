@@ -346,14 +346,15 @@ function resolveLink(name: string): string {
 
 const signatures = new Map<string, string>();
 
-// Equal signatures mean two zones show the same time at every instant of the
-// next two years
+// Equal signatures mean two zones showed the same time for the past year and
+// will for the next two. The past year keeps apart zones that just changed
+// their rules, like Edmonton and Regina, while browsers still have the old ones.
 function signatureOf(name: string): string {
   if (!signatures.has(name)) {
-    const upcoming = timeTypesBetween(iana.readZone(name), now, now + 2 * YEAR);
-    const signature = upcoming
-      .filter(({ offset }, index) => index === 0 || offset !== upcoming[index - 1].offset)
-      .map(({ time, offset }) => `${time === now ? "now" : time}:${offset}`)
+    const types = timeTypesBetween(iana.readZone(name), now - YEAR, now + 2 * YEAR);
+    const signature = types
+      .filter(({ offset }, index) => index === 0 || offset !== types[index - 1].offset)
+      .map(({ time, offset }) => `${time}:${offset}`)
       .join(",");
     signatures.set(name, signature);
   }
