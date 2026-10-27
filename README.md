@@ -17,6 +17,15 @@ getTimeZones().map((timeZone) => timeZone.currentTimeFormat);
 - The country of a visitor's time zone, to guess where they are without an IP lookup.
 - No dependencies, ESM and CommonJS, TypeScript types.
 
+<p align="center">
+  <a href="https://turnshift.app/?utm_source=github&utm_medium=sponsor&utm_campaign=tzdb">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./sponsor/turnshift-dark.png">
+      <img width="880" alt="Sponsored by TurnShift, the team calendar in Slack. Try it free for 14 days." src="./sponsor/turnshift-light.png">
+    </picture>
+  </a>
+</p>
+
 ## Always up to date
 
 Every day, a [GitHub workflow](.github/workflows/release.yml) compiles the latest
