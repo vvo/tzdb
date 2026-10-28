@@ -1,1 +1,1 @@
-export const tzdbVersion = "2026e";
+export const tzdbVersion = "2026f";
