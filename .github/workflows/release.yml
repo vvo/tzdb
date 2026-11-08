@@ -1,3 +1,13 @@
+# Stages new versions on npm with trusted publishing (OIDC). No NPM_TOKEN anywhere.
+#
+# The npm trusted publisher for @vvo/tzdb points at this file (release.yml)
+# and only allows `npm stage publish`. A staged version goes live once Vincent
+# approves it with 2FA on npmjs.com or with `npm stage approve`.
+#
+# The `release` job runs our dependencies but has no OIDC token: it versions,
+# tags, creates the GitHub release and packs the tarball. The `stage` job holds
+# the OIDC token and installs no dependencies: it only runs Node and npm on
+# that tarball.
 name: Release
 
 on:
@@ -9,11 +19,8 @@ on:
   schedule:
     - cron: "0 14 * * *"
 
-permissions:
-  contents: write # commit data updates, push release tags
-  issues: write # comment on released issues
-  pull-requests: write # comment on released pull requests
-  id-token: write # npm trusted publishing, no NPM_TOKEN needed
+# Reset the default token scope, then grant per job.
+permissions: {}
 
 # Runs one at a time with the dependency updates, both push to main
 concurrency:
@@ -23,23 +30,76 @@ jobs:
   release:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: write # commit data updates, push release tags
+      issues: write # comment on released issues
+      pull-requests: write # comment on released pull requests
+    outputs:
+      tarball: ${{ steps.tarball.outputs.name }}
 
     steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .node-version
           package-manager-cache: false
-      - run: pnpm install --frozen-lockfile
+      # No dependency needs an install script, so none gets to run
+      - run: pnpm install --frozen-lockfile --ignore-scripts
       - run: pnpm run generate
       # Never commit or publish data that fails the tests
       - run: pnpm run lint
       - run: pnpm test
-      - uses: stefanzweifel/git-auto-commit-action@v7
+      - uses: stefanzweifel/git-auto-commit-action@d0b01107b5db882071f96de5dd4b54961ea93f4c # v7.2.1
         with:
           commit_message: "feat(data): Automatic data update"
           file_pattern: raw-time-zones.json time-zones-names.json src/tzdb-version.ts src/countries.ts
+      # Versions, tags and creates the GitHub release, packs into release/, does not publish
       - run: pnpm exec semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - id: tarball
+        run: |
+          shopt -s nullglob
+          files=(release/*.tgz)
+          if [ "${#files[@]}" -gt 0 ]; then
+            echo "name=$(basename "${files[0]}")" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.tarball.outputs.name != ''
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: tarball
+          path: release/${{ steps.tarball.outputs.name }}
+          if-no-files-found: error
+          retention-days: 7
+
+  stage:
+    needs: release
+    if: needs.release.outputs.tarball != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write # mint the OIDC token npm exchanges for a stage token
+
+    steps:
+      # Writes the .npmrc pointing at the npm registry. Deliberately without
+      # NODE_AUTH_TOKEN: a token in the environment would take precedence over OIDC.
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
+      # `npm stage` needs npm >= 11.15
+      - run: npm install --global --ignore-scripts npm@11.21.2
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: tarball
+          path: ${{ runner.temp }}/release
+      - run: npm stage publish "$RUNNER_TEMP/release/$TARBALL" --provenance --tag "$DIST_TAG"
+        env:
+          TARBALL: ${{ needs.release.outputs.tarball }}
+          DIST_TAG: ${{ github.ref_name == 'next' && 'next' || 'latest' }}
+      - run: echo "::notice::Staged $TARBALL. Approve it at https://www.npmjs.com/package/@vvo/tzdb (Staged Packages tab) or with npm stage approve <id>."
+        env:
+          TARBALL: ${{ needs.release.outputs.tarball }}
