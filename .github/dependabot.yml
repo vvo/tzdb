@@ -1,0 +1,30 @@
+# Dependency updates arrive as pull requests for Vincent to merge, never as
+# direct pushes to main: any change outside the data files makes the next
+# release wait for his approval on npm (see release.yml).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    # Skip versions published less than 7 days ago, npm usually pulls compromised releases by then
+    cooldown:
+      default-days: 7
+    groups:
+      dependencies:
+        patterns: ["*"]
+    commit-message:
+      prefix: chore(deps)
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: ci
