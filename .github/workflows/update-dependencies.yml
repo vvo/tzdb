@@ -18,17 +18,17 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .node-version
           package-manager-cache: false
       # Respects minimumReleaseAge from pnpm-workspace.yaml
-      - run: pnpm update --latest
+      - run: pnpm update --latest --ignore-scripts
       - run: pnpm run lint
       - run: pnpm test
-      - uses: stefanzweifel/git-auto-commit-action@v7
+      - uses: stefanzweifel/git-auto-commit-action@d0b01107b5db882071f96de5dd4b54961ea93f4c # v7.2.1
         with:
           commit_message: "chore(deps): update dependencies"
           file_pattern: package.json pnpm-lock.yaml
