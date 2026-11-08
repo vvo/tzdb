@@ -1,9 +1,9 @@
-# Releases new versions on npm with trusted publishing (OIDC). No NPM_TOKEN anywhere.
+# Publishes new versions on npm with trusted publishing (OIDC). No NPM_TOKEN anywhere.
 #
-# Data-only releases publish on their own. Any other release is staged on npm
-# and waits for Vincent's 2FA approval, with an issue telling him so. The npm
-# trusted publisher for @vvo/tzdb points at this file (release.yml) and allows
-# `npm publish` and `npm stage publish`.
+# The npm trusted publisher for @vvo/tzdb points at this file (release.yml).
+# Code and dependency changes only reach main through pull requests Vincent
+# merges (Dependabot for dependencies), so every release is built from reviewed
+# code and data from IANA and GeoNames.
 #
 # The `release` job runs our dependencies but has no OIDC token: it versions,
 # tags, creates the GitHub release and packs the tarball. The `publish` job holds
@@ -81,15 +81,9 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-      id-token: write # mint the OIDC token npm exchanges for a publish or stage token
-      issues: write # ask Vincent to approve a staged version
+      id-token: write # mint the OIDC token npm exchanges for a publish token
 
     steps:
-      # Tags only, to compare the release with what is live on npm. Never installs anything.
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-          persist-credentials: false
       # Writes the .npmrc pointing at the npm registry. Deliberately without
       # NODE_AUTH_TOKEN: a token in the environment would take precedence over OIDC.
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -97,55 +91,13 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org/
           package-manager-cache: false
-      # `npm stage` needs npm >= 11.15
+      # Trusted publishing needs npm >= 11.5.1; pinned so the job never picks up a new npm on its own
       - run: npm install --global --ignore-scripts npm@11.21.2
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: tarball
           path: ${{ runner.temp }}/release
-      # Publishes on its own only when every commit since the version live on npm
-      # touched data files and nothing else: same code, lockfile and workflows as
-      # a release that already went out. Anything else waits for Vincent's 2FA.
-      - id: decide
-        run: |
-          version="${TARBALL#vvo-tzdb-}"
-          version="${version%.tgz}"
-          live=$(npm view @vvo/tzdb version)
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "live=$live" >> "$GITHUB_OUTPUT"
-          git fetch --tags --force --quiet
-          changed=$(git diff --name-only "v$live" "v$version")
-          echo "Changed since v$live:"
-          echo "$changed"
-          other=$(echo "$changed" | grep -vxE 'raw-time-zones\.json|time-zones-names\.json|src/tzdb-version\.ts|src/countries\.ts' || true)
-          if [ "$DIST_TAG" = latest ] && [ -n "$changed" ] && [ -z "$other" ]; then
-            echo "mode=publish" >> "$GITHUB_OUTPUT"
-          else
-            echo "mode=stage" >> "$GITHUB_OUTPUT"
-            echo "Needs approval, changed outside the data files:"
-            echo "$other"
-          fi
+      - run: npm publish "$RUNNER_TEMP/release/$TARBALL" --provenance --tag "$DIST_TAG"
         env:
           TARBALL: ${{ needs.release.outputs.tarball }}
           DIST_TAG: ${{ github.ref_name == 'next' && 'next' || 'latest' }}
-      - if: steps.decide.outputs.mode == 'publish'
-        run: npm publish "$RUNNER_TEMP/release/$TARBALL" --provenance --tag latest
-        env:
-          TARBALL: ${{ needs.release.outputs.tarball }}
-      - if: steps.decide.outputs.mode == 'stage'
-        run: |
-          npm stage publish "$RUNNER_TEMP/release/$TARBALL" --provenance --tag "$DIST_TAG"
-          gh issue create --repo "$GITHUB_REPOSITORY" \
-            --title "Approve @vvo/tzdb $VERSION on npm" \
-            --body "This release changes more than the time zone data, so it is staged on npm and waits for your approval.
-
-          - Compare: https://github.com/$GITHUB_REPOSITORY/compare/v$LIVE...v$VERSION
-          - Approve: npmjs.com, avatar menu, Staged Packages, or \`npm stage list @vvo/tzdb\` then \`npm stage approve <id>\`
-
-          Close this issue once it is approved or rejected."
-        env:
-          TARBALL: ${{ needs.release.outputs.tarball }}
-          DIST_TAG: ${{ github.ref_name == 'next' && 'next' || 'latest' }}
-          VERSION: ${{ steps.decide.outputs.version }}
-          LIVE: ${{ steps.decide.outputs.live }}
-          GH_TOKEN: ${{ github.token }}

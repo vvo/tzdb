@@ -31,8 +31,7 @@ getTimeZones().map((timeZone) => timeZone.currentTimeFormat);
 Every day, a [GitHub workflow](.github/workflows/release.yml) compiles the latest
 [IANA tz database](https://data.iana.org/time-zones/tzdb/), takes city populations from
 [GeoNames](https://www.geonames.org/), tests the result and publishes a new version when
-the data changed. A release that changes anything else (code, dependencies) waits for the maintainer's
-2FA approval on npm.
+something changed.
 
 Current offsets come from the browser or Node.js at runtime. A site that never updates this package
 still follows daylight saving changes, and agrees with the offsets `Intl.DateTimeFormat` gives the
